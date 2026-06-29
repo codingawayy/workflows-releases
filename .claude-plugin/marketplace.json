@@ -1,0 +1,13 @@
+{
+  "name": "workflows",
+  "owner": {
+    "name": "Workflows"
+  },
+  "plugins": [
+    {
+      "name": "workflows",
+      "version": "0.1.0",
+      "source": "./plugin"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "workflows",
+  "displayName": "Workflows",
+  "description": "The agent's workflow intelligence: the intake and workflow-author skills plus the workflows MCP server — record, route, and author workflow work from Claude Code. The floor to use the product; no tray required.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Workflows"
+  },
+  "license": "UNLICENSED"
+}
