@@ -14,11 +14,14 @@ table and artifact ownership from what you declare; you never write those direct
   "artifacts":   [ "problem", "analysis", "summary" ],   // the {{...}} document namespace
   "documents":   [ "lessons" ],                          // cross-item workflow docs (shared, versioned)
   "offChainStatuses": [],                                // statuses NO transition touches (usually empty)
-  "statusDisplay": [ { "name": "proposed", "label": "Proposed", "color": "#888" } ], // optional board metadata
-  "itemEntryCriteria": "what type+size of item belongs here",          // the input contract (always set it)
-  "entryDocumentGuidance": "what a good entry document for this workflow contains"
+  "statusDisplay": [ { "name": "proposed", "label": "Proposed", "color": "#888" } ] // optional board metadata
 }
 ```
+
+The revision is PURELY the state machine (transitions, artifacts, documents, offChainStatuses,
+statusDisplay). The **input contract** (`itemEntryCriteria` + `entryDocumentGuidance`) is NOT part of
+`input` — it is plain workflow-registry metadata set separately via `create_workflow` / `update_workflow`
+(see `reference/best-practices.md`), never through `set_workflow_definition`.
 
 ## A transition (an edge in the graph)
 
@@ -28,6 +31,7 @@ table and artifact ownership from what you declare; you never write those direct
   "ordinal": 2,                    // authoring/pipeline order (a board-order hint)
   "statusIn": "proposed",          // the status it leaves FROM; omit ONLY on the single entry transition
   "statusOut": "analyzed",         // the status it lands ON
+  "label": "Drop",                 // optional button text for the move; blank = derived (see below)
   "execution": "shared",           // "shared" (default) or "isolated" (runs in its own git worktree)
   "description": "what this edge is for — short prose",
   "auto": true,                    // engine auto-advances through it when an item rests at statusIn
@@ -52,6 +56,12 @@ Key rules the store enforces (it rejects a violation with a clear message):
 - **`produces` names a declared artifact**, and each artifact is produced by at most one transition.
 - **A backward edge** carries `invalidates` (the documents it clears so their producers re-run) and must
   be `execution: "shared"`, never isolated.
+- **`label` sets the move button's text** — the word a human reads to steer (a close action's "Drop" /
+  "Abandon" / "Won't fix", a re-open, a "Continue"). Leave it blank and the read-model derives one (a
+  humanized transition name, "Re-open {Artifact}", or the generic "Drop"). Keep it a **plain action verb**:
+  the SAME string reaches both the board button and the agent (`get_item` `moves[].label`), and each
+  surface adds its own framing — so never embed board-only phrasing like "Drop in Claude Code". If two
+  close actions on one status would read the same, the board auto-appends each one's destination.
 
 ## A step (one unit of an autonomous transition)
 

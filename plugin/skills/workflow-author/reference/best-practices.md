@@ -73,6 +73,12 @@ colleague who starts cold:
 Every workflow you build or amend must carry both contract fields. They are what the intake path routes
 and records against; a workflow without them gives intake no bar and degrades recording quality.
 
+They are plain workflow-registry metadata (the same row as name / description / prefix), NOT part of the
+revision. Set them via `create_workflow` (a new workflow) or `update_workflow` (an existing one) — both
+take `itemEntryCriteria` and `entryDocumentGuidance`; on `update_workflow` a null/blank value clears the
+field. Editing the input contract is saved in place and **never forks a revision** — it is independent of
+`set_workflow_definition`.
+
 - **`itemEntryCriteria`** — the admission predicate: what kinds of item belong here, by **type AND
   size** (e.g. bug / feature / refactor / epic; small / large). Write it so a router can tell, from an
   item's description, whether it fits — and what to do when it doesn't (too large → an epic; a different

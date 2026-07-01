@@ -31,11 +31,13 @@ hand them a blank slate and ask them to design a state machine.
    scratch.
 2. **Choose the shape.** Match the intent to one of the idioms in `reference/shape-idioms.md`
    (linear pipeline · capture→work→done · review-gate). Most workflows are one idiom, lightly adapted.
-3. **Draft against best practice.** Build the typed `input` following `reference/best-practices.md`
-   (how to shape transitions, step system-prompts, documents, router conditions, terminal outcomes) and
-   the field-by-field contract in `reference/revision-input.md`. Always author the workflow's **input
-   contract** (`itemEntryCriteria` + `entryDocumentGuidance`) — it is what the intake path routes and
-   records against, and a workflow without it gives intake no bar.
+3. **Draft against best practice.** Build the typed `input` (the state machine) following
+   `reference/best-practices.md` (how to shape transitions, step system-prompts, documents, router
+   conditions, terminal outcomes) and the field-by-field contract in `reference/revision-input.md`.
+   Always author the workflow's **input contract** (`itemEntryCriteria` + `entryDocumentGuidance`) too —
+   it is what the intake path routes and records against, and a workflow without it gives intake no bar.
+   The input contract is plain workflow-registry metadata set via `create_workflow` / `update_workflow`,
+   NOT part of the revision `input` (see `reference/best-practices.md`).
 4. **Propose, then gate.** Authoring or changing a workflow is a high-impact, gated action — never write
    silently. Show the customer the shape (a short transition list / small diagram), call out the
    trade-offs and what each step costs, and **wait for approval**. Surface one real decision at a time.
@@ -43,7 +45,9 @@ hand them a blank slate and ask them to design a state machine.
    `description`, `prefix` for a new one — it registers the workflow itself, so a separate
    `create_workflow` is only needed to reserve an empty workflow up front). The store validates the
    revision as a whole and rejects an invalid one with a domain message — relay it verbatim and fix the
-   shape; it never half-writes.
+   shape; it never half-writes. Write the **input contract** separately via `create_workflow` (a new
+   workflow) or `update_workflow` (an existing one) — setting it is saved in place and never forks a
+   revision.
 6. **Confirm.** Report what landed, and — for an amend — remind that in-flight items keep their old
    revision.
 
