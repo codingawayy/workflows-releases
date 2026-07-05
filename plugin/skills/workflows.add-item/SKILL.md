@@ -1,9 +1,10 @@
 ---
-name: intake
+user-invocable: false
+name: workflows.add-item
 description: Turn natural-language work into well-recorded items — break it down, route each piece to the right workflow, record each to that workflow's quality bar, and (on approval) create them with their dependencies and epics. Invoke when the user wants to capture an idea or body of work into the tracker, break work into items/tickets, add a backlog item, or file discussed work — and when a workflow step needs to record outstanding work programmatically.
 ---
 
-# Intake — record work into the right workflow, to spec
+# Add item — record work into the right workflow, to spec
 
 Recording work is the highest-leverage quality lever in the system: every item is the cold-start input
 to an autonomous pipeline, so a badly recorded item poisons every stage downstream. Your job is to take
@@ -49,13 +50,13 @@ record the same well-scoped item regardless of who or what will work it.
 
 ## The human gate — proportional, and per caller
 
-The gate scales to the risk of the action, and **who** is calling intake changes how an ungated step is
+The gate scales to the risk of the action, and **who** is recording changes how an ungated step is
 handled:
 
 - **Routing an item into an existing workflow** is low-risk — show it, don't block on it.
 - **Creating or amending a workflow, or a loose/forced fit**, is high-risk — it needs explicit approval.
 
-Recording items needs **write access** to the tracker, so intake records only from a write-capable
+Recording items needs **write access** to the tracker, so it records only from a write-capable
 context. Two such callers share the same loop:
 
 - **An interactive human** in the terminal — present the full proposal and wait for confirmation before
@@ -64,7 +65,7 @@ context. Two such callers share the same loop:
   capture outstanding work) — the human is present, so it records like the case above, just seeded from
   the work the step surfaced rather than a fresh request.
 
-When intake runs in a context **without** write access — notably an autonomous workflow step, whose
+When the skill runs in a context **without** write access — notably an autonomous workflow step, whose
 tracker tools are read-only by construction — it can still break the work down, route it, and draft the
 proposals into its own output document, but it must **not** claim to record them. Recording is deferred
 to the next write-capable context (a human, or an interactive step). Don't pretend an item was created

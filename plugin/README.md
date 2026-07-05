@@ -5,14 +5,16 @@ the product interactively — no tray required. Installing it gives you:
 
 - **The `workflows` MCP server** — the in-session tools to read and drive workflow items over your
   board's API.
-- **The `intake` skill** — turn natural-language work into well-recorded items: broken down, routed to
+- **`/workflows:add-item`** — turn natural-language work into well-recorded items: broken down, routed to
   the right workflow, and recorded to that workflow's quality bar.
-- **The `workflow-author` skill** — build and amend workflows (the state machines items flow through)
+- **`/workflows:author`** — build and amend workflows (the state machines items flow through)
   to good shape.
-- **The `run-item` skill** — drive an item's transitions from your interactive session (also what the
+- **`/workflows:run-item`** — drive an item's transitions from your interactive session (also what the
   board's terminal handoff invokes).
-- **The `discuss` skill** — talk to an item: understand its documents, Q&A, and pipeline position, and
+- **`/workflows:discuss`** — talk to an item: understand its documents, Q&A, and pipeline position, and
   amend it safely out of the conversation.
+
+Each command runs its underlying skill; the skills also auto-invoke when the agent recognizes the need.
 
 ## Install
 

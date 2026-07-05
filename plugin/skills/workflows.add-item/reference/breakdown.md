@@ -53,5 +53,5 @@ goal's shared context (its brief/scope). File items under it via the **parent** 
   under a noise container.
 
 (Labels are a separate axis — work-type and area tags, not epics. Assign them from the existing
-vocabulary with `list_labels` + `assign_label`; never coin a new label during intake, and assign none
+vocabulary with `list_labels` + `assign_label`; never coin a new label while recording, and assign none
 when none fits — a wrong label makes the board's filters lie.)

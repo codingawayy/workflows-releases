@@ -1,6 +1,7 @@
 ---
-name: discuss
-description: Talk to one workflow item — load its documents, Q&A history, and place in its pipeline, discuss it with the user, and carry any amendment back through the safest path (Q&A guidance, a manual move, a stepped transition, or a claim-respecting document rewrite). Invoke when the user wants to discuss, understand, question, or amend an item in conversation (e.g. "/discuss B26.070", "talk to I26.002 about its proposal", "why is this item where it is?").
+user-invocable: false
+name: workflows.discuss
+description: Talk to one workflow item — load its documents, Q&A history, and place in its pipeline, discuss it with the user, and carry any amendment back through the safest path (Q&A guidance, a manual move, a stepped transition, or a claim-respecting document rewrite). Invoke when the user wants to discuss, understand, question, or amend an item in conversation (e.g. "/workflows:discuss B26.070", "talk to I26.002 about its proposal", "why is this item where it is?").
 ---
 
 # Discuss an item
@@ -13,7 +14,7 @@ and the refusal handling in §4 — never around them.
 
 ## 1. Load the item (claim-free)
 
-Use the item id the user gave (e.g. `/discuss B26.070`). If none was given, ask — don't guess.
+Use the item id the user gave (e.g. `/workflows:discuss B26.070`). If none was given, ask — don't guess.
 Then load, without taking any claim:
 
 - `get_item` — status, the available `moves`, dependencies, children, parent, and the claim

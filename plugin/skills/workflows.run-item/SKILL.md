@@ -1,6 +1,7 @@
 ---
-name: run-item
-description: Drive a workflow item through its autonomous transitions from THIS interactive Claude Code session — the next_step → execute → submit_step loop — instead of the headless engine. Invoke when the user wants to run, drive, advance, or work a backlog item in-session (e.g. "/run-item B26.070", "drive B26.012 in-session", "advance this item here").
+user-invocable: false
+name: workflows.run-item
+description: Drive a workflow item through its autonomous transitions from THIS interactive Claude Code session — the next_step → execute → submit_step loop — instead of the headless engine. Invoke when the user wants to run, drive, advance, or work a backlog item in-session (e.g. "/workflows:run-item B26.070", "drive B26.012 in-session", "advance this item here").
 ---
 
 # Run an item in-session
@@ -13,10 +14,10 @@ to do next; this skill is the wrapper so the user need not know the tool names. 
 
 ## 1. Identify the item (and an optional target transition)
 
-Use the item id the user gave (e.g. `/run-item B26.070` → `B26.070`). If none was given, ask which item
+Use the item id the user gave (e.g. `/workflows:run-item B26.070` → `B26.070`). If none was given, ask which item
 — don't guess. Everything below uses that id as `item`.
 
-A second argument is an optional **target transition** to drive (e.g. `/run-item B26.070 finalize-design`
+A second argument is an optional **target transition** to drive (e.g. `/workflows:run-item B26.070 finalize-design`
 → `item = B26.070`, `transition = finalize-design`). This is how the board's deep link hands off a
 specific stepped move at a forked status — the human clicked *that* move, so:
 
@@ -66,7 +67,7 @@ iteration handles exactly one response.
   `submit_step` again. Nothing was recorded; do **not** advance past it.
 - **`paused`** — a leaf returned clarification questions; the item is blocked at its current transition. **Stop
   the loop.** Surface the questions to the user; once they answer (in conversation, then recorded on the
-  item's Q&A thread), they can re-invoke `/run-item` to resume.
+  item's Q&A thread), they can re-invoke `/workflows:run-item` to resume.
 - **`conflict`** — a document-writing step's target workflow document changed underneath you between read
   and write; nothing was recorded. The server refreshed the **document file** in the work dir to the
   current content (this is the `{{<name>}}` input your prompt references — NOT the `output` file, which

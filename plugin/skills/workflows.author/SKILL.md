@@ -1,5 +1,6 @@
 ---
-name: workflow-author
+user-invocable: false
+name: workflows.author
 description: Build a new workflow or amend an existing one to good shape — its transitions, step prompts, documents, router conditions, terminal outcomes, and input contract — over the workflows MCP write ops. Invoke when the user wants to create, design, edit, restructure, or improve a workflow definition (the state machine items flow through), or asks "author/change/add a workflow", "edit this workflow's steps", or "set up a pipeline for X".
 ---
 
@@ -35,7 +36,7 @@ hand them a blank slate and ask them to design a state machine.
    `reference/best-practices.md` (how to shape transitions, step system-prompts, documents, router
    conditions, terminal outcomes) and the field-by-field contract in `reference/revision-input.md`.
    Always author the workflow's **input contract** (`itemEntryCriteria` + `entryDocumentGuidance`) too —
-   it is what the intake path routes and records against, and a workflow without it gives intake no bar.
+   it is what the add-item skill routes and records against, and a workflow without it gives that skill no bar.
    The input contract is plain workflow-registry metadata set via `create_workflow` / `update_workflow`,
    NOT part of the revision `input` (see `reference/best-practices.md`).
 4. **Propose, then gate.** Authoring or changing a workflow is a high-impact, gated action — never write

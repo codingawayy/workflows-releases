@@ -70,8 +70,8 @@ colleague who starts cold:
 
 ## The input contract — always author it
 
-Every workflow you build or amend must carry both contract fields. They are what the intake path routes
-and records against; a workflow without them gives intake no bar and degrades recording quality.
+Every workflow you build or amend must carry both contract fields. They are what the add-item skill routes
+and records against; a workflow without them gives that skill no bar and degrades recording quality.
 
 They are plain workflow-registry metadata (the same row as name / description / prefix), NOT part of the
 revision. Set them via `create_workflow` (a new workflow) or `update_workflow` (an existing one) — both
@@ -85,7 +85,7 @@ field. Editing the input contract is saved in place and **never forks a revision
   kind → another workflow).
 - **`entryDocumentGuidance`** — what a good entry document for this workflow contains: the sections, the
   bar (e.g. "specific, verifiable acceptance criteria, not 'looks better'"), and what to avoid
-  (prescribing the solution). This is the recording-quality target the intake path writes to.
+  (prescribing the solution). This is the recording-quality target the add-item skill writes to.
 
 Both are inert prose — the store never enforces them. They exist to make a non-expert's recording good
 by default, which is the whole point: item-recording quality is the input contract to everything
