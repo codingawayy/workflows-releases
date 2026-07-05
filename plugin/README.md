@@ -9,6 +9,10 @@ the product interactively — no tray required. Installing it gives you:
   the right workflow, and recorded to that workflow's quality bar.
 - **The `workflow-author` skill** — build and amend workflows (the state machines items flow through)
   to good shape.
+- **The `run-item` skill** — drive an item's transitions from your interactive session (also what the
+  board's terminal handoff invokes).
+- **The `discuss` skill** — talk to an item: understand its documents, Q&A, and pipeline position, and
+  amend it safely out of the conversation.
 
 ## Install
 
