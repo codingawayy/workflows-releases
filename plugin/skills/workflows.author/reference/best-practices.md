@@ -39,6 +39,28 @@ colleague who starts cold:
 - **Return structured facts the control plane branches on.** A step's `schemaJson` should surface the
   booleans/arrays that drive `runWhen`/`over`/`gateField` (e.g. `reviewApplies`, `lenses`, `mustFix`).
 
+### Spawn-capable steps — granting subagents
+
+A step whose decomposition is discovered *while it runs* (analyze-then-execute work that can't be a
+`fanout` over declared data) may spawn its own subagents: grant `Agent` and `Task` in the step's
+`tools` (add `TodoWrite` so it can plan explicitly). The grant is the opt-in — the engine's defaults
+never include them, and there is no other switch.
+
+**Always pair the grant with an orchestration method in the step's `systemPrompt`** — a headless
+step that can spawn but wasn't told how tends to fan out chaotically and synthesize nothing. Offer
+this as the default (adapt the domain, keep the discipline):
+
+> Before executing, orient in the sources and write an explicit plan (use TodoWrite). Spawn
+> subagents only where pieces are genuinely independent — never to split sequential work; prefer
+> doing small work yourself. Give each subagent a self-contained brief and require a concrete
+> result back. You own the synthesis: integrate the results yourself, verify the whole against the
+> task, and leave nothing half-finished — a partial fan-out you cannot integrate is worse than a
+> smaller plan you can.
+
+Trade-offs to tell the customer when proposing one: the step re-runs whole if the run is killed (no
+per-subagent resume), its subagents run outside the machine's concurrency cap, and their cost is
+neither capped nor recorded.
+
 ## Documents — the steering surface
 
 - **`produces` artifacts** are per-item deliverables (the `problem`, `analysis`, `summary`). Declare one
