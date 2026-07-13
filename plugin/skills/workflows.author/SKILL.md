@@ -64,6 +64,14 @@ first principles — not "is it built well?" but "does it cohere and deserve to 
   agent work, the document shape is wrong.
 - **Is this the smallest shape that does the job?** Bias hard to fewer transitions. Reach for an extra
   stage only when it lands a document someone genuinely consumes.
+- **Tune a step's *strength* (model + effort), not only its existence.** Orthogonal to "does this step
+  earn its place": once a step exists, its per-step `model`/`effort` set how much compute the leaf gets.
+  Leave both **blank by default** — the step then inherits the run-wide model and the CLI's default
+  effort, which is right for most steps. Override *upward* (a stronger model, higher effort) for a
+  genuinely hard step — deep synthesis, a load-bearing review gate — where a weak pass quietly degrades
+  every document downstream. Be wary of *downgrades*: a too-weak step produces plausible-but-worse output
+  with **no error and no feedback loop** — the failure is invisible until a human reads the deliverable —
+  so only drop a step's strength when its work is genuinely mechanical (boilerplate, formatting).
 
 When in doubt, ship the simpler shape and let the customer ask for more.
 

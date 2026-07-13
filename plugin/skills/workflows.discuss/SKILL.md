@@ -50,12 +50,13 @@ keeps the generative act inside the pipeline. In order of preference:
    `kind: "stepped"` move): with the user's go-ahead, call `next_step({ item, transition })` and
    follow each response's `guidance` verbatim, submitting via `submit_step` as it directs — the
    server owns the sequencing. The user is present, so work any interactive step through with them.
-4. **Rewrite a document directly** — `write_artifact` with `overwrite: true`. This is the
+4. **Rewrite a document directly** — `write_artifact` with a required `reason`. This is the
    exception path: use it when the change is genuinely an *edit to an existing deliverable* the
    discussion has settled, not new work a transition should produce. Show the user what you're
-   about to write (the change, not necessarily the whole document) and get their yes first. When
-   the edit shifts the item's meaning or records a decision, also leave a Q&A `note` saying what
-   changed and why — your judgment; a typo-level fix needs no note.
+   about to write (the change, not necessarily the whole document) and get their yes first. The
+   `reason` (a one-line why) is mandatory and is recorded structurally: the system writes an `edit`
+   round on the Q&A thread and the board badges the document as edited outside a transition — so
+   you no longer hand-write a separate provenance note, the reason IS the record.
 
 ## 4. When a write is refused
 
