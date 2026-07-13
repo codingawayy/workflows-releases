@@ -14,6 +14,22 @@ covers: decomposing work into clean items, surveying the rest of the tracker, or
   explicitly **out**, and the done-when. State what *is* — not a plan narrative or a status. (The exact
   sections come from the target workflow's `entryDocumentGuidance` — see `routing.md`.)
 
+## Read the workflow's execution budget when sizing
+
+A workflow's steps each run at an assigned **model + reasoning effort** — the depth of thinking the
+pipeline invests at that stage. Read the target workflow's definition (`read_workflow_definition`) to
+see where that budget is spent, because it tells you which stages carry the design reasoning and which
+are expected to execute from decisions already made:
+
+- The **analysis and planning** transitions typically get the heaviest budget — they absorb ambiguity.
+  An item can arrive under-specified and be shaped there.
+- The **implement** transition runs from resolved documents — its job is to execute the plan, not to
+  make design calls the earlier stages skipped.
+
+Size and grain each item so the hard decisions land in the high-budget reasoning stages, not deferred
+into execution. An item that would force the implement stage to invent design is mis-sized: split it so
+the reasoning has a home upstream, or route it to a workflow whose budget matches the work.
+
 ## Survey the rest of the tracker before proposing
 
 You are curating one shared tracker, not dropping items into a void. Before proposing:
