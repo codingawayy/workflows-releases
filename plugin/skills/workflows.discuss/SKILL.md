@@ -41,11 +41,14 @@ keeps the generative act inside the pipeline. In order of preference:
 
 1. **Record guidance** — the user wants a future (re-)run to know something: `append_question`
    (`answer` when they're answering an open question, `note` for a free-form steer).
-2. **Take a manual move** — one of the `kind: "manual"` entries in `moves`:
-   - a backward, invalidating move (a "redo X") → `send_back` with the invalidated artifact's
-     name and the user's reason — it records the reason and clears the artifact atomically;
+2. **Take a manual move** — one of the `kind: "manual"` entries in `moves` (there is no separate
+   "send back" operation — going back is just another manual move):
    - a terminal move (a drop/reject) → `drop_item` with the rationale;
-   - any other manual move (park, re-open) → `set_status` to the move's `statusOut`.
+   - any other manual move (park, re-open, redo) → `set_status` to the move's `statusOut`, with
+     `reason` set to the user's rationale (recorded as an audited Q&A round). This only moves the
+     status — a move's `removes` (the documents it would delete) applies solely when a human takes
+     that declared edge from the board; `set_status` leaves documents in place until whatever
+     produces them runs again, so say so if the user expects an immediate clear;
 3. **Conclude in a stepped transition** — the discussion decided real pipeline work should run (a
    `kind: "stepped"` move): with the user's go-ahead, call `next_step({ item, transition })` and
    follow each response's `guidance` verbatim, submitting via `submit_step` as it directs — the

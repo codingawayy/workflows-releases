@@ -14,7 +14,7 @@ table and artifact ownership from what you declare; you never write those direct
   "artifacts":   [ "problem", "analysis", "summary" ],   // the {{...}} document namespace
   "documents":   [ "lessons" ],                          // cross-item workflow docs (shared, versioned)
   "offChainStatuses": [],                                // statuses NO transition touches (usually empty)
-  "statusDisplay": [ { "name": "proposed", "label": "Proposed", "color": "#888" } ] // optional board metadata
+  "statusDisplay": [ { "name": "proposed", "label": "Proposed", "color": "#888", "ordinal": 0 } ] // optional board metadata + column order
 }
 ```
 
@@ -22,6 +22,10 @@ The revision is PURELY the state machine (transitions, artifacts, documents, off
 statusDisplay). The **input contract** (`itemEntryCriteria` + `entryDocumentGuidance`) is NOT part of
 `input` — it is plain workflow-registry metadata set separately via `create_workflow` / `update_workflow`
 (see `reference/best-practices.md`), never through `set_workflow_definition`.
+
+`statusDisplay[].ordinal` is the board's column order — omit it (or pass `null`) and the store fills it
+from the graph's pipeline shape, so you never have to compute it by hand; set it explicitly only to pin an
+order the derivation wouldn't produce on its own (e.g. a status reachable only through a rework edge).
 
 ## A transition (an edge in the graph)
 
@@ -36,7 +40,7 @@ statusDisplay). The **input contract** (`itemEntryCriteria` + `entryDocumentGuid
   "description": "what this edge is for — short prose",
   "auto": true,                    // engine auto-advances through it when an item rests at statusIn
   "routerCondition": "...",        // prose the router reads to pick this edge among a status's exits
-  "invalidates": ["analysis"],     // a BACKWARD edge: documents it clears on the way back
+  "removes": ["analysis"],         // opt-in: documents this edge deletes when taken (never a movement condition)
   "produces": "analysis",          // the artifact this transition's deliverable IS
   "steps": [ /* ordered steps, for an autonomous transition */ ]
 }
@@ -54,11 +58,12 @@ Key rules the store enforces (it rejects a violation with a clear message):
 - **At most one `auto` exit per status.** A status may fork into several exits, but only one may be the
   automatic one. Multiple non-auto exits are `routerCondition`-routed (the router picks) or human-started.
 - **`produces` names a declared artifact**, and each artifact is produced by at most one transition.
-- **A backward edge** carries `invalidates` (the documents it clears so their producers re-run) and must
-  be `execution: "shared"`, never isolated.
+- **`removes` names declared artifacts to delete when the edge is taken** — an opt-in effect, never a
+  condition of movement (there is no "backward edge" concept). An edge with none leaves its documents in
+  place until a re-run overwrites them; the only guards are that each name is declared and none repeats.
 - **`label` sets the move button's text** — the word a human reads to steer (a close action's "Drop" /
   "Abandon" / "Won't fix", a re-open, a "Continue"). Leave it blank and the read-model derives one (a
-  humanized transition name, "Re-open {Artifact}", or the generic "Drop"). Keep it a **plain action verb**:
+  humanized transition name, "Re-open {Status}" from the edge's target status, or the generic "Drop"). Keep it a **plain action verb**:
   the SAME string reaches both the board button and the agent (`get_item` `moves[].label`), and each
   surface adds its own framing — so never embed board-only phrasing like "Drop in Claude Code". If two
   close actions on one status would read the same, the board auto-appends each one's destination.

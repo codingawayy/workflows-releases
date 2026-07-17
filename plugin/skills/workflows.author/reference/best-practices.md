@@ -78,8 +78,10 @@ neither capped nor recorded.
   opted out").
 - A status with an `auto` exit must not also carry routed exits (the auto exit is unconditional). Either
   a status auto-advances, or it forks on conditions, or it waits for a human — pick one.
-- **Backward edges** (`invalidates`) model rework: an edge back to an earlier status that clears the
-  documents whose producers must re-run. List exactly the documents that go stale.
+- **Rework edges** (`removes`) model going back: an edge to an earlier status that removes the documents
+  whose producers should re-run. List exactly the documents that go stale — `removes` is an opt-in effect
+  any edge may declare (there is no "backward edge" concept), never a condition of movement: an edge with
+  none leaves its documents in place until a re-run overwrites them.
 
 ## Terminal outcomes — how work ends
 

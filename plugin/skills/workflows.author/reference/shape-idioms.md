@@ -37,7 +37,7 @@ add-item (interactive, → proposed)
 - Each autonomous stage is `auto` so the pipeline flows; the one interactive stage is where a human
   steers. The human reads the `analysis` and decides — they never watch the agent work.
 - The implement stage is `execution: "isolated"` (its own git worktree) because it changes code.
-- Add rework as a **backward edge** (`analyzed → proposed`, `invalidates: ["analysis"]`) and drop edges
+- Add rework as an ordinary edge back (`analyzed → proposed`, `removes: ["analysis"]`) and drop edges
   off each pre-terminal status.
 - Use for any "an idea becomes a shipped change through reviewed stages" process.
 
