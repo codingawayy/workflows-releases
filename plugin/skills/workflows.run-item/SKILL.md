@@ -90,7 +90,7 @@ Halt the loop — do not keep calling `next_step` — on any of these. Report wh
 | `noop`         | No autonomous transition consumes the item's status — nothing to drive.               |
 | `blocked`      | Unmet dependencies (listed in `unmet`) — those items must finish first.          |
 | `busy`         | Another run (likely the auto-run engine) holds the run claim — wait or stop it.  |
-| `unsupported`  | This step kind isn't drivable in-session — run the transition with the headless engine (`bun run engine --item <id>`). |
+| `unsupported`  | This step kind isn't drivable in-session — run the transition headless instead (the item's move on the board, or auto-run). |
 | `error`        | A precondition failed (e.g. unsupported definition format) — report the message. |
 | `paused` / `gate-exhausted` / `claim-lost` | Pause/cap/handover from a submit (§3).                          |
 
