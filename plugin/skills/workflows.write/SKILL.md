@@ -29,7 +29,7 @@ context beyond what earlier documents established. Write so that reader can act.
 7. **Link, don't name-drop.** Refer to another item as a link in the project-scoped URL form
    (`[B123](/my-project/item/B123)`), and link related material, including external sources.
 8. **Qualify code references.** Prefix a code symbol with the parent it belongs to —
-   `Transition.deliverableArtifact()`, not "the deliverableArtifact method".
+   `WorkflowModel.entryDocument()`, not "the entryDocument method".
 9. **Write for the cold-start reader.** Use the vocabulary earlier documents established; define any
    term this document itself introduces. Self-check: reread as a first-timer who is mid-task and
    will stop reading the moment they can act.
