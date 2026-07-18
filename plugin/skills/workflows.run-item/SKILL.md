@@ -1,7 +1,7 @@
 ---
 user-invocable: false
 name: workflows.run-item
-description: Drive a workflow item through its autonomous transitions from THIS interactive Claude Code session — the next_step → execute → submit_step loop — instead of the headless engine. Invoke when the user wants to run, drive, advance, or work a backlog item in-session (e.g. "/workflows:run-item B26.070", "drive B26.012 in-session", "advance this item here").
+description: Drive a workflow item through its autonomous transitions from THIS interactive session — the next_step → execute → submit_step loop — instead of the headless engine. Invoke when the user wants to run, drive, advance, or work a backlog item in-session (e.g. "/workflows:run-item B26.070", "drive B26.012 in-session", "advance this item here").
 ---
 
 # Run an item in-session
@@ -44,10 +44,9 @@ iteration handles exactly one response.
   WITH THE USER. If a user is present, surface the brief and collaborate, then submit their settled
   outcome; if you are driving unattended, **stop** and report that the item has reached a step that needs
   the user (don't fabricate their input).
-- **`run-fanout`** — N members that must run **isolated and in parallel**. Launch one subagent per member
-  via the Task tool (never inline — inline lets their contexts contaminate each other and defeats the
-  fan-out). Each subagent uses the shared `instructions`, carries out its member's `prompt`, and writes a
-  `schema`-conforming result to its member `output`. When **every** member output is written, call
+- **`run-fanout`** — N members that must run **isolated and in parallel**. Launch one subagent per member via the Task tool (never inline — inline lets their contexts contaminate each other and defeats the fan-out). Each subagent uses the shared `instructions`, carries out its
+  member's `prompt`, and writes a `schema`-conforming result to its member `output`. When **every**
+  member output is written, call
   `submit_step({ item, transition, step, result: {} })`. Handle the response (§3), then loop.
 - **`run-gate-step`** — one leaf of a review→fix→re-review gate-loop; the driver owns the loop. Carry out
   this single leaf (a review round, or the fix when `phase` is `"fix"`), write to `output`, and call
