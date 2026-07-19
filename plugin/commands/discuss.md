@@ -5,5 +5,4 @@ argument-hint: <item-id>
 
 Run the `workflows.discuss` skill on item `$ARGUMENTS`.
 
-The argument is the item id (e.g. `B26.070`). If none was provided, ask the user which item they
-want to discuss.
+The argument is the item id (e.g. `B26.070`). If none was provided, ask the user which item they want to discuss.

@@ -24,8 +24,9 @@ you must know the workflow before you write the document.
 2. **Route each item — first.** Read `list_workflows` (names, descriptions, and each workflow's
    `itemEntryCriteria` + `entryDocumentGuidance`). Match the item's **type and size** against each
    workflow's `itemEntryCriteria` and pick the best fit. Follow `reference/routing.md`.
-3. **Record to spec.** Build the item's entry document to the chosen workflow's `entryDocumentGuidance`
-   — its sections, its bar. The guidance is the recording target, not a suggestion.
+3. **Record to spec.** Build the item's entry document(s) — a workflow may declare more than one (e.g. a
+   Backlog item's `problem` + `criteria`) — to the chosen workflow's `entryDocumentGuidance`, its sections,
+   its bar. The guidance is the recording target, not a suggestion.
 4. **If the fit breaks while recording, reconsider from the start.** If writing the document reveals the
    item doesn't actually belong in that workflow (it's larger than you thought, or a different kind),
    loop back to step 2 — don't force a misfit through.
@@ -38,8 +39,9 @@ you must know the workflow before you write the document.
 7. **Propose, then gate.** Present the breakdown — a table (label · title · scope · **target workflow** ·
    depends-on), the dependency picture, the epic each cluster sits under — and **wait** for the gate.
 8. **Record on approval, in dependency order.** Create each item after its dependencies exist, with its
-   entry document and dependencies in the same `create_item` call; file each under its epic via
-   `parentId`. Follow `reference/breakdown.md`.
+   WHOLE entry-document set and dependencies in the same `create_item` call (its `entryDocuments` map —
+   no document is ever written by a follow-up `write_artifact`); file each under its epic via `parentId`.
+   Follow `reference/breakdown.md`.
 
 ## Sizing for cold-start
 
