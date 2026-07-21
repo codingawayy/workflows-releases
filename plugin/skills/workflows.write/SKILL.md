@@ -25,7 +25,9 @@ context beyond what earlier documents established. Write so that reader can act.
    In a flowchart or mindmap, wrap any node/edge label containing punctuation like parentheses or
    brackets in double quotes (`A["app.web.api (gateway)"]`, not `A[app.web.api (gateway)]`) —
    otherwise the parser reads it as node syntax and the board silently drops the diagram to raw
-   source.
+   source. In a `sequenceDiagram`, keep semicolons out of message text (`A->>B: do x, then y`, not
+   `A->>B: do x; y`) — a `;` ends the statement, so the parser reads the rest as a stray arrow and the
+   whole diagram fails to render.
 4. **Show code where it helps.** A short snippet often lands faster than a paragraph describing it.
 5. **Concrete over abstract.** A specific example or number lands faster than a general statement.
 6. **Don't repeat** what the item's earlier documents already established — build on them, cite
