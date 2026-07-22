@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "workflows": {
+      "command": "bun",
+      "args": [
+        "run",
+        "./mcp.js"
+      ],
+      "cwd": "."
+    }
+  }
+}

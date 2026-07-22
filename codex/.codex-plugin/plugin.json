@@ -1,0 +1,25 @@
+{
+  "name": "workflows",
+  "version": "0.1.38",
+  "description": "Record, route, author, discuss, and drive workflow work from Codex.",
+  "author": {
+    "name": "Workflows"
+  },
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Workflows",
+    "shortDescription": "Drive structured workflow items from Codex.",
+    "longDescription": "Record, route, author, discuss, and drive document-producing workflow items over the Workflows MCP server.",
+    "developerName": "Workflows",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Help me drive a workflow item."
+    ]
+  }
+}

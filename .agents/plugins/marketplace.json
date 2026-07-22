@@ -1,0 +1,21 @@
+{
+  "name": "workflows",
+  "interface": {
+    "displayName": "Workflows"
+  },
+  "plugins": [
+    {
+      "name": "workflows",
+      "version": "0.1.38",
+      "source": {
+        "source": "local",
+        "path": "./codex"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

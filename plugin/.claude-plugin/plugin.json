@@ -2,7 +2,7 @@
   "name": "workflows",
   "displayName": "Workflows",
   "description": "The agent's workflow intelligence: the /workflows:add-item, /workflows:author, /workflows:run-item, and /workflows:discuss commands plus the workflows MCP server — record, route, author, discuss, and drive workflow work from Claude Code. The floor to use the product; no tray required.",
-  "version": "0.1.37",
+  "version": "0.1.38",
   "author": {
     "name": "Workflows"
   },
