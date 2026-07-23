@@ -1,47 +1,23 @@
 ---
-description: Connect this repo + machine to a Workflows board — write the per-machine credential and the per-repo project id so the workflows MCP can authenticate and resolve its project.
+description: Connect this repo + machine to a Workflows board through the packaged machine-connection operation.
 argument-hint: <apiUrl> <token> <projectId>   (or paste the link from the board's Setup page)
 ---
 
-Connect to a Workflows board. The `workflows` MCP server needs **two** facts to come up, and this
-command writes both — the board's **Setup** page (`/setup`) hands you the values:
-
-- a **per-machine** credential — the board `apiUrl` + a bearer `token` (shared across every repo on
-  this machine), and
-- a **per-repo** `projectId` — which Workflows project *this* repo maps to.
+Connect this repository and machine to a Workflows board.
 
 Input the user provided: `$ARGUMENTS`
 
-Do this:
+1. Parse either a `workflows://connect?apiUrl=…&token=…&projectId=…` link or whitespace-separated
+   `apiUrl token projectId`. URL-decode link parameters. Require all three values; never guess a project id.
 
-1. **Parse the inputs.** Accept either a `workflows://connect?apiUrl=…&token=…&projectId=…` link (extract
-   and URL-decode the query params) or whitespace-separated values in the order `apiUrl token projectId`.
-   Validate that `apiUrl` is an `http(s)://` URL, the token is non-empty, and `projectId` is non-empty.
-   If any is missing, stop and ask the user to paste the link or the three values from the board's Setup
-   page — do not guess a `projectId`.
+2. Call the packaged `connect_machine` MCP tool exactly once with `{ apiUrl, token }`. This is the one
+   executable connection policy: it validates the board URL, performs the single `/health` discovery,
+   serializes the machine-auth mutation, recovers malformed machine state, and never returns the bearer.
+   Do not fetch `/health`, inspect machine files, or reproduce any of those rules in this command.
 
-2. **Write the per-machine credential.** The file is `client.json` under the Workflows home's
-   `.workflows/` directory — i.e. `$WORKFLOWS_HOME/.workflows/client.json` when `WORKFLOWS_HOME` is set,
-   otherwise `~/.workflows/client.json` (create the directory if needed). Read any existing file first and
-   **merge**, setting `apiUrl` and `apiToken` and leaving other keys intact:
+3. Only after `connect_machine` succeeds, merge `{ "projectId": "<projectId>" }` into this repository's
+   `.workflows/config.json`, preserving existing `verify` and `worktreeSetup` fields. This repository file
+   contains no credential.
 
-   ```json
-   { "apiUrl": "<apiUrl>", "apiToken": "<token>" }
-   ```
-
-   The token is a code-execution-grade secret — write it only to this file, never echo it back in full,
-   and never write it into the project repo.
-
-3. **Write the per-repo project id.** In the current repo, write `.workflows/config.json` with the
-   `projectId` (merge into any existing file, leaving `verify`/`worktreeSetup` intact):
-
-   ```json
-   { "projectId": "<projectId>" }
-   ```
-
-   Without this, the `workflows` MCP server cannot resolve which project the repo operates and will fail
-   to start. (This file holds no secret — it is the per-repo fact the team can commit.)
-
-4. **Confirm.** Report the board URL and the project id you connected (never the token), and tell the
-   user the `workflows` MCP tools are now configured — they may need to restart Claude Code or run `/mcp`
-   for the server to pick up the new config.
+4. Report the connected board URL and project id, never the token. The user may need to restart Claude
+   Code or run `/mcp` so the server reopens with the new repository context.

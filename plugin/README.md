@@ -46,9 +46,10 @@ project. Run this once **in your project repo**:
 Your board's **Setup** page (`/setup`) hands you the `apiUrl`, `token`, and `projectId` — pick your
 project there and it gives you a complete `workflows://connect?apiUrl=…&token=…&projectId=…` link
 carrying all three. **Copy that link (don't click it)** and pass it to `/workflows:connect`. `/connect`
-writes the per-machine credential to `~/.workflows/client.json` and the per-repo `projectId` to this
+writes the per-machine connection (`apiUrl`, compatibility bearer, and board-discovered public
+`workosClientId`) to `~/.workflows/client.json` and the per-repo `projectId` to this
 repo's `.workflows/config.json` — both of which the `workflows` MCP server needs to start and
 authenticate against your board.
 
-(If you also run the Workflows tray agent for auto-run, its connect flow writes the same per-machine
-credential — you only connect the machine once, but each repo needs its `projectId`.)
+(If you also run `app.tray` for auto-run, its tokenless connect flow discovers and writes the same
+per-machine WorkOS binding — you only connect the machine once, but each repo needs its `projectId`.)
