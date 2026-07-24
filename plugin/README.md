@@ -40,16 +40,15 @@ The plugin carries the intelligence and the MCP registration; it does **not** ba
 project. Run this once **in your project repo**:
 
 ```
-/workflows:connect <apiUrl> <token> <projectId>
+/workflows:connect <apiUrl> <projectId>
 ```
 
-Your board's **Setup** page (`/setup`) hands you the `apiUrl`, `token`, and `projectId` — pick your
-project there and it gives you a complete `workflows://connect?apiUrl=…&token=…&projectId=…` link
-carrying all three. **Copy that link (don't click it)** and pass it to `/workflows:connect`. `/connect`
-writes the per-machine connection (`apiUrl`, compatibility bearer, and board-discovered public
-`workosClientId`) to `~/.workflows/client.json` and the per-repo `projectId` to this
-repo's `.workflows/config.json` — both of which the `workflows` MCP server needs to start and
-authenticate against your board.
+Your board's **Setup** page (`/setup`) hands you the `apiUrl` and `projectId` — pick your project there
+and it gives you a complete secretless `workflows://connect?apiUrl=…&projectId=…` link. **Copy that
+link (don't click it)** and pass it to `/workflows:connect`. `/connect` writes the per-machine
+connection (`apiUrl` and the board-discovered public `workosClientId`) to
+`~/.workflows/client.json`, asks you to approve a one-time personal sign-in code, and writes the
+per-repo `projectId` to this repo's `.workflows/config.json`.
 
-(If you also run `app.tray` for auto-run, its tokenless connect flow discovers and writes the same
+(If you also run `app.tray` for auto-run, its connect flow discovers and writes the same
 per-machine WorkOS binding — you only connect the machine once, but each repo needs its `projectId`.)

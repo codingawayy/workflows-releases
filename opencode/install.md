@@ -110,20 +110,13 @@ If the file doesn't exist, create it with:
 
 ### 4 · Connection — tell the user to run the board-generated command themselves
 
-**Do not ask the user to paste their access token into this chat session.** The token is a
-code-execution-grade secret, and pasting it into a chatbot sends it through the LLM provider and
-persists it in session history.
+Tell the user: "Go to the Workflows setup page on your board and run its connection command in your
+terminal. It invokes the installed `mcp.js connect` operation, shows a one-time device approval code,
+and stores the resulting personal credential outside every repo."
 
-Instead, tell the user: "Go to the Workflows setup page on your board, reveal the credential command,
-and run it in your terminal. It invokes the installed `mcp.js connect` operation and writes
-`~/.workflows/client.json` — the token never passes through this chat."
-
-The setup page offers Bash and PowerShell adapters that put the bearer in a temporary `WF_API_TOKEN`
-environment variable and run `bun run "$HOME/.workflows/mcp.js" connect <apiUrl>`. That bundled operation
-owns discovery and all machine-auth mutation policy. The user runs it in their terminal, not in this session.
-
-Do not write `~/.workflows/client.json` yourself — you don't have the token, and the user shouldn't
-paste it here to give it to you.
+The command is `bun run "$HOME/.workflows/mcp.js" connect <apiUrl>`. It contains no credential. The
+bundled operation owns discovery, device approval, and all machine-auth mutation policy; do not write
+`~/.workflows/client.json` or the device credential yourself.
 
 ### 5 · Write the per-repo project id
 
@@ -147,4 +140,4 @@ the credential and the project. Then tell them to verify the install by running:
 They should see a routing question or a proposal — if they do, the server is running and
 authenticated. If OpenCode's MCP list doesn't show `workflows` as running, the most common causes
 are: Bun not on the PATH OpenCode inherits (check with `bun --version` in a terminal), a wrong path
-in the `command` field, or a typo'd token.
+in the `command` field, or an unapproved/expired device code.
