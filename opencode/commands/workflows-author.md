@@ -1,5 +1,5 @@
 ---
-description: Build a new workflow or amend an existing one to good shape — its transitions, step prompts, documents, router conditions, terminal outcomes, and input contract — over the workflows MCP write ops. Invoke when the user wants to create, design, edit, restructure, or improve a workflow definition (the state machine items flow through), or asks "author/change/add a workflow", "edit this workflow's steps", or "set up a pipeline for X".
+description: Use when creating or changing a workflow definition, including its transitions, steps, documents, conditions, outcomes, or input contract.
 ---
 
 Author a workflow per the following request, using the instructions below: $ARGUMENTS

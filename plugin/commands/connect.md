@@ -1,5 +1,5 @@
 ---
-description: Connect this repo + machine to a Workflows board through the packaged machine-connection operation.
+description: Use when connecting a repository and machine to a Workflows board.
 argument-hint: <apiUrl> <projectId>   (or paste the link from the board's Setup page)
 ---
 

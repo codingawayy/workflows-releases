@@ -1,6 +1,6 @@
 ---
 name: workflows.discuss
-description: Talk to one workflow item — load its documents, Q&A history, and place in its pipeline, discuss it with the user, and carry any amendment back through the safest path (Q&A guidance, a manual move, a stepped transition, or a claim-respecting document rewrite). Invoke when the user wants to discuss, understand, question, or amend an item in conversation (e.g. "$workflows.discuss B26.070", "talk to I26.002 about its proposal", "why is this item where it is?").
+description: Use when discussing, understanding, questioning, or amending one workflow item in conversation.
 ---
 
 # Discuss an item
@@ -11,27 +11,43 @@ item can be discussed in **any** state, even mid-run. Writing can contend: the s
 write while another run holds the item (`RunClaimHeld`), so amendments go through the paths in §3
 and the refusal handling in §4 — never around them.
 
-## 1. Load the item (claim-free)
+## 1. Establish the full item context once (claim-free)
 
 Use the item id the user gave (e.g. `$workflows.discuss B26.070`). If none was given, ask — don't guess.
-Then load, without taking any claim:
+Treat a continuous conversation about the same item as one discussion session. On the first turn
+for that item, load this complete snapshot without taking any claim:
 
 - `get_item` — status, the available `moves`, dependencies, children, parent, and the claim
   fields (`claimed_by`, `claim_phase`).
 - `read_artifact` for each name in `artifacts` — the item's actual deliverables.
 - `get_questions` — the full dialogue log (clarifications, steer reasons, notes), oldest-first.
-- `read_workflow_definition` for the item's workflow — to place its status in the pipeline and
-  explain what each available move would do.
+
+Retain that snapshot and subsequent tool results in the conversation. A later user message or
+another invocation of this skill does **not** start a new discussion session: do not repeat these
+reads merely because the user sent another message. If the user switches to a different item,
+establish a new full snapshot for that item.
+
+`get_item.moves` is the claim-aware source of truth for the current available actions. Call
+`read_workflow_definition` only when the user asks about the wider pipeline and the retained
+`moves` do not answer the question; retain that definition for the rest of the discussion session.
+
+Refresh only the narrowest relevant part of the snapshot when the user asks for the latest state
+or reports an external change, a tool reports a conflict or stale state, this session completes a
+transition that may have changed information now being discussed, or required information has not
+yet been loaded. After a known write, update the retained snapshot from the operation and its result;
+do not read the same data back merely to confirm the write. Mark only unknown derived data stale —
+for example, after `set_status` the new status is known, but call `get_item` if a later reply needs
+the newly available `moves`.
 
 If `claimed_by` is set, a run is live: say so up front — discussion is unaffected, but amendments
 will be refused until the run ends (`moves` also comes back empty under a live claim).
 
 ## 2. Discuss
 
-Answer from the loaded material — quote the documents, use the workflow's own vocabulary for
+Answer from the retained session snapshot — quote the documents, use the workflow's own vocabulary for
 statuses and transitions, and say plainly when something isn't recorded rather than inferring it.
 Explain *why* the item is where it is (which transition produced what, what a move would change)
-from the definition, not from guesswork. Related items that come up are one `get_item` away.
+from the retained evidence, not from guesswork. Related items that come up are one `get_item` away.
 
 ## 3. Amend
 

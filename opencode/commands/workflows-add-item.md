@@ -1,5 +1,5 @@
 ---
-description: Turn natural-language work into well-recorded items — break it down, route each piece to the right workflow, record each to that workflow's quality bar, and (on approval) create them with their dependencies and epics. Invoke when the user wants to capture an idea or body of work into the tracker, break work into items/tickets, add a backlog item, or file discussed work — and when a workflow step needs to record outstanding work programmatically.
+description: Use when capturing work in the tracker, breaking it into items, routing each item to a workflow, or recording dependencies and epics.
 ---
 
 Capture the following into the tracker using the instructions below: $ARGUMENTS
