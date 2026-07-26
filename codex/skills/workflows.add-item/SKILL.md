@@ -3,6 +3,10 @@ name: workflows.add-item
 description: Use when capturing work in the tracker, breaking it into items, routing each item to a workflow, or recording dependencies and epics.
 ---
 
+## Repository context
+
+Before calling any other Workflows MCP tool, call `select_repository` once with the active repository's absolute root path. This transient argument compensates for Codex not advertising MCP roots; never write the path into repository or user configuration.
+
 # Add item — record work into the right workflow, to spec
 
 Recording work is the highest-leverage quality lever in the system: every item is the cold-start input

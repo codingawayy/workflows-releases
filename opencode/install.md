@@ -18,29 +18,40 @@ you a **board URL** (`apiUrl`), a **project id** (`projectId`), and a **scope** 
 
 The user's one-liner named a scope: **global** or **per-repo**.
 
-| File              | Global scope                          | Per-repo scope                    |
-| ----------------- | ------------------------------------- | --------------------------------- |
-| `mcp.js`          | `~/.workflows/mcp.js`                 | `~/.workflows/mcp.js`             |
-| Command files     | `~/.config/opencode/commands/`        | `.opencode/commands/`             |
-| Skill trees       | `~/.config/opencode/skills/`          | `.opencode/skills/`               |
-| `opencode.json`   | `~/.config/opencode/opencode.json`    | `opencode.json` (repo root)       |
-| `client.json`     | `~/.workflows/client.json`            | `~/.workflows/client.json`        |
-| `config.json`     | `.workflows/config.json` (repo root)  | `.workflows/config.json`          |
+| File              | Global scope                                | Per-repo scope                       |
+| ----------------- | ------------------------------------------- | ------------------------------------ |
+| `mcp.js`          | `~/.config/opencode/workflows/mcp.js`       | `.opencode/workflows/mcp.js`         |
+| Command files     | `~/.config/opencode/commands/`              | `.opencode/commands/`                |
+| Skill trees       | `~/.config/opencode/skills/`                | `.opencode/skills/`                  |
+| `opencode.json`   | `~/.config/opencode/opencode.json`          | `opencode.json` (repo root)          |
+| `client.json`     | `~/.workflows/client.json`                  | `~/.workflows/client.json`           |
+| `config.json`     | `.workflows/config.json` (repo root)        | `.workflows/config.json`             |
 
-`mcp.js` and `client.json` are always per-machine (one install serves every repo). Command files,
-skill trees, and the `opencode.json` MCP registration follow the scope. `config.json` is always
-per-repo.
+The OpenCode delivery owns its `mcp.js`, commands, skills, and MCP registration in the selected
+OpenCode scope. Only connection state belongs under `~/.workflows`; `config.json` is always per-repo.
 
 ## Steps
 
 ### 1 · Download `mcp.js`
 
-Download the bundled MCP server to `~/.workflows/mcp.js`:
+Download the bundled OpenCode MCP server from:
+
+`https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/mcp.js`
+
+**Global:**
 
 ```sh
-mkdir -p ~/.workflows
-curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/plugin/mcp.js \
-  -o ~/.workflows/mcp.js
+mkdir -p ~/.config/opencode/workflows
+curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/mcp.js \
+  -o ~/.config/opencode/workflows/mcp.js
+```
+
+**Per-repo** (run from the repo root):
+
+```sh
+mkdir -p .opencode/workflows
+curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/mcp.js \
+  -o .opencode/workflows/mcp.js
 ```
 
 ### 2 · Download the command files
@@ -118,14 +129,32 @@ Do not copy only `SKILL.md`; the `reference/` documents are part of the skill pa
 ### 4 · Register the MCP server
 
 Merge the `mcp.workflows` entry into the scope-appropriate `opencode.json`. Read the existing file
-first (if any) and merge — do not overwrite. The entry to add:
+first (if any) and merge — do not overwrite.
+
+**Global:** merge into `~/.config/opencode/opencode.json`. Resolve the user's home directory while
+installing and write the resulting absolute `mcp.js` path into this machine-local config:
 
 ```json
 {
   "mcp": {
     "workflows": {
       "type": "local",
-      "command": ["bun", "run", "~/.workflows/mcp.js"],
+      "command": ["bun", "run", "<absolute-home>/.config/opencode/workflows/mcp.js"],
+      "enabled": true
+    }
+  }
+}
+```
+
+**Per-repo:** merge into `opencode.json` at the repo root. Use the portable repository-relative path:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "workflows": {
+      "type": "local",
+      "command": ["bun", "run", ".opencode/workflows/mcp.js"],
       "enabled": true
     }
   }
@@ -134,35 +163,20 @@ first (if any) and merge — do not overwrite. The entry to add:
 
 If the file already has a `"mcp"` key, add `"workflows"` inside it. If it already has a
 `"mcp.workflows"` key, replace its value. Keep all other keys (`$schema`, `plugin`, `command`, etc.)
-intact.
+intact. A repository `opencode.json` must never contain a home directory or another machine-specific
+path.
 
-**Global:** merge into `~/.config/opencode/opencode.json`.
-**Per-repo:** merge into `opencode.json` at the repo root.
+### 5 · Connection — tell the user to run the scope-owned bundle
 
-If the file doesn't exist, create it with:
+Tell the user to run the command for the scope they selected, substituting the `apiUrl` from their
+one-liner:
 
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "mcp": {
-    "workflows": {
-      "type": "local",
-      "command": ["bun", "run", "~/.workflows/mcp.js"],
-      "enabled": true
-    }
-  }
-}
-```
+- **Global:** `bun run "$HOME/.config/opencode/workflows/mcp.js" connect <apiUrl>`
+- **Per-repo:** `bun run ".opencode/workflows/mcp.js" connect <apiUrl>`
 
-### 5 · Connection — tell the user to run the board-generated command themselves
-
-Tell the user: "Go to the Workflows setup page on your board and run its connection command in your
-terminal. It invokes the installed `mcp.js connect` operation, shows a one-time device approval code,
-and stores the resulting personal credential outside every repo."
-
-The command is `bun run "$HOME/.workflows/mcp.js" connect <apiUrl>`. It contains no credential. The
-bundled operation owns discovery, device approval, and all machine-auth mutation policy; do not write
-`~/.workflows/client.json` or the device credential yourself.
+The command contains no credential. It shows a one-time device approval code, then the bundled
+operation owns discovery and all machine-auth mutation policy; do not write `~/.workflows/client.json`
+or the device credential yourself.
 
 ### 6 · Write the per-repo project id
 

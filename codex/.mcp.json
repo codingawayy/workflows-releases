@@ -1,11 +1,10 @@
 {
   "mcpServers": {
-    "workflows_connect": {
+    "workflows": {
       "command": "bun",
       "args": [
         "run",
-        "./mcp.js",
-        "--connect-only"
+        "./mcp.js"
       ],
       "cwd": "."
     }

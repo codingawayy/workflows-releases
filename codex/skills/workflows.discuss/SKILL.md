@@ -3,6 +3,10 @@ name: workflows.discuss
 description: Use when discussing, understanding, questioning, or amending one workflow item in conversation.
 ---
 
+## Repository context
+
+Before calling any other Workflows MCP tool, call `select_repository` once with the active repository's absolute root path. This transient argument compensates for Codex not advertising MCP roots; never write the path into repository or user configuration.
+
 # Discuss an item
 
 Hold a conversation about one workflow item, grounded in what the store actually holds — its

@@ -6,7 +6,7 @@
       "command": [
         "bun",
         "run",
-        "src/apps/mcp/server.ts"
+        ".opencode/workflows/mcp.js"
       ],
       "enabled": true
     }

@@ -3,6 +3,10 @@ name: workflows.author
 description: Use when creating or changing a workflow definition, including its transitions, steps, documents, conditions, outcomes, or input contract.
 ---
 
+## Repository context
+
+Before calling any other Workflows MCP tool, call `select_repository` once with the active repository's absolute root path. This transient argument compensates for Codex not advertising MCP roots; never write the path into repository or user configuration.
+
 # Authoring a workflow
 
 A workflow is the document-producing state machine an item flows through: a graph of **transitions**

@@ -3,6 +3,10 @@ name: workflows.run-item
 description: Drive a workflow item through its autonomous transitions from THIS interactive session — the next_step → execute → submit_step loop — instead of the headless engine. Invoke when the user wants to run, drive, advance, or work a backlog item in-session (e.g. "$workflows.run-item B26.070", "drive B26.012 in-session", "advance this item here").
 ---
 
+## Repository context
+
+Before calling any other Workflows MCP tool, call `select_repository` once with the active repository's absolute root path. This transient argument compensates for Codex not advertising MCP roots; never write the path into repository or user configuration.
+
 # Run an item in-session
 
 Drive one workflow item forward from this interactive session, using the `next_step` / `submit_step`
