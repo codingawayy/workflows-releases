@@ -1,6 +1,6 @@
 {
   "name": "workflows",
-  "version": "0.1.53",
+  "version": "0.1.54",
   "description": "Record, route, author, discuss, and drive workflow work from Codex.",
   "author": {
     "name": "Workflows"
