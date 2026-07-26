@@ -22,7 +22,7 @@ Use the connection values provided in the user's request.
 
 4. Only after the personal credential is ready, merge `{ "projectId": "<projectId>" }` into this repository's
    `.workflows/config.json`, preserving existing `verify` and `worktreeSetup` fields. This repository file
-   contains no credential.
+   contains no credential. Require the `mcpEntry` returned by `connect_machine`, then merge a project-scoped `[mcp_servers.workflows]` table into `.codex/config.toml` with `command = "bun"` and `args = ["run", "<absolute mcpEntry>"]`, replacing any existing table of that name and preserving every unrelated setting. Do not set `cwd`: Codex must launch app.mcp from this repository.
 
 5. Report the connected board URL and project id. The user may need to restart Codex or start a new Codex session
    so the server reopens with the new repository context.
