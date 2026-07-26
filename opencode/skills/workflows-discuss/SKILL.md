@@ -1,7 +1,6 @@
 ---
-name: workflows.discuss
+name: workflows-discuss
 description: Use when discussing, understanding, questioning, or amending one workflow item in conversation.
-user-invocable: false
 ---
 
 # Discuss an item
@@ -14,7 +13,7 @@ and the refusal handling in §4 — never around them.
 
 ## 1. Establish the full item context once (claim-free)
 
-Use the item id the user gave (e.g. `/workflows:discuss B26.070`). If none was given, ask — don't guess.
+Use the item id the user gave (e.g. `/workflows-discuss B26.070`). If none was given, ask — don't guess.
 Treat a continuous conversation about the same item as one discussion session. On the first turn
 for that item, load this complete snapshot without taking any claim:
 

@@ -1,7 +1,6 @@
 ---
-name: workflows.add-item
+name: workflows-add-item
 description: Use when capturing work in the tracker, breaking it into items, routing each item to a workflow, or recording dependencies and epics.
-user-invocable: false
 ---
 
 # Add item — record work into the right workflow, to spec

@@ -8,7 +8,8 @@ you a **board URL** (`apiUrl`), a **project id** (`projectId`), and a **scope** 
 
 - **`mcp.js`** — the `workflows` MCP server (the spine tools: read/write items, drive transitions).
 - **Four command files** — `/workflows-add-item`, `/workflows-author`, `/workflows-run-item`,
-  `/workflows-discuss` (the interactive workflow intelligence).
+  `/workflows-discuss` (thin user-facing entry points).
+- **Four native skill trees** — the interactive workflow intelligence plus every referenced document.
 - **MCP registration** — an `mcp.workflows` entry in an `opencode.json` config that launches the
   server.
 - **Connection** — a per-machine board/auth-binding file and a per-repo project-id file.
@@ -21,12 +22,14 @@ The user's one-liner named a scope: **global** or **per-repo**.
 | ----------------- | ------------------------------------- | --------------------------------- |
 | `mcp.js`          | `~/.workflows/mcp.js`                 | `~/.workflows/mcp.js`             |
 | Command files     | `~/.config/opencode/commands/`        | `.opencode/commands/`             |
+| Skill trees       | `~/.config/opencode/skills/`          | `.opencode/skills/`               |
 | `opencode.json`   | `~/.config/opencode/opencode.json`    | `opencode.json` (repo root)       |
 | `client.json`     | `~/.workflows/client.json`            | `~/.workflows/client.json`        |
 | `config.json`     | `.workflows/config.json` (repo root)  | `.workflows/config.json`          |
 
-`mcp.js` and `client.json` are always per-machine (one install serves every repo). Command files
-and the `opencode.json` MCP registration follow the scope. `config.json` is always per-repo.
+`mcp.js` and `client.json` are always per-machine (one install serves every repo). Command files,
+skill trees, and the `opencode.json` MCP registration follow the scope. `config.json` is always
+per-repo.
 
 ## Steps
 
@@ -55,7 +58,7 @@ Download the four command files to the scope-appropriate commands directory. The
 mkdir -p ~/.config/opencode/commands
 for verb in add-item author run-item discuss; do
   curl -fsSL "https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/commands/workflows-${verb}.md" \
-    -o "~/.config/opencode/commands/workflows-${verb}.md"
+    -o "$HOME/.config/opencode/commands/workflows-${verb}.md"
 done
 ```
 
@@ -69,7 +72,50 @@ for verb in add-item author run-item discuss; do
 done
 ```
 
-### 3 · Register the MCP server
+### 3 · Download the native skill trees
+
+Choose the skill root from the requested scope:
+
+- **Global:** `$HOME/.config/opencode/skills`
+- **Per-repo:** `.opencode/skills`
+
+Download every file below while preserving its relative path beneath that root:
+
+```text
+workflows-add-item/SKILL.md
+workflows-add-item/reference/breakdown.md
+workflows-add-item/reference/routing.md
+workflows-author/SKILL.md
+workflows-author/reference/best-practices.md
+workflows-author/reference/revision-input.md
+workflows-author/reference/shape-idioms.md
+workflows-run-item/SKILL.md
+workflows-discuss/SKILL.md
+```
+
+For example, set `SKILL_ROOT` to the scope-appropriate directory, then:
+
+```sh
+BASE="https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/skills"
+for rel in \
+  workflows-add-item/SKILL.md \
+  workflows-add-item/reference/breakdown.md \
+  workflows-add-item/reference/routing.md \
+  workflows-author/SKILL.md \
+  workflows-author/reference/best-practices.md \
+  workflows-author/reference/revision-input.md \
+  workflows-author/reference/shape-idioms.md \
+  workflows-run-item/SKILL.md \
+  workflows-discuss/SKILL.md
+do
+  mkdir -p "$SKILL_ROOT/$(dirname "$rel")"
+  curl -fsSL "$BASE/$rel" -o "$SKILL_ROOT/$rel"
+done
+```
+
+Do not copy only `SKILL.md`; the `reference/` documents are part of the skill package.
+
+### 4 · Register the MCP server
 
 Merge the `mcp.workflows` entry into the scope-appropriate `opencode.json`. Read the existing file
 first (if any) and merge — do not overwrite. The entry to add:
@@ -108,7 +154,7 @@ If the file doesn't exist, create it with:
 }
 ```
 
-### 4 · Connection — tell the user to run the board-generated command themselves
+### 5 · Connection — tell the user to run the board-generated command themselves
 
 Tell the user: "Go to the Workflows setup page on your board and run its connection command in your
 terminal. It invokes the installed `mcp.js connect` operation, shows a one-time device approval code,
@@ -118,7 +164,7 @@ The command is `bun run "$HOME/.workflows/mcp.js" connect <apiUrl>`. It contains
 bundled operation owns discovery, device approval, and all machine-auth mutation policy; do not write
 `~/.workflows/client.json` or the device credential yourself.
 
-### 5 · Write the per-repo project id
+### 6 · Write the per-repo project id
 
 Write (merging into any existing file) to `.workflows/config.json` in the repo root:
 
@@ -128,7 +174,7 @@ Write (merging into any existing file) to `.workflows/config.json` in the repo r
 
 This file holds no secret — it's fine to commit.
 
-### 6 · Verify
+### 7 · Verify
 
 Tell the user to **restart OpenCode** (or reload its config) so the `workflows` MCP server picks up
 the credential and the project. Then tell them to verify the install by running:

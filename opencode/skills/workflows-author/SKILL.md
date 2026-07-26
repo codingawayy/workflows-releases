@@ -1,7 +1,6 @@
 ---
-name: workflows.author
+name: workflows-author
 description: Use when creating or changing a workflow definition, including its transitions, steps, documents, conditions, outcomes, or input contract.
-user-invocable: false
 ---
 
 # Authoring a workflow
