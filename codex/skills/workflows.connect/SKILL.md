@@ -21,7 +21,7 @@ Use the connection values provided in the user's request.
    `attemptId`. If either operation fails, report its safe error and leave the repository unconfigured.
 
 4. Only after the personal credential is ready, merge `{ "projectId": "<projectId>" }` into this repository's
-   `.workflows/config.json`, preserving existing `verify` and `worktreeSetup` fields. This repository file
+   `.workflows/config.json`, preserving existing `verify` and `setup` fields. This repository file
    contains no credential. Then call `select_repository` exactly once with this repository's absolute root path. The path selects transient app.mcp context for this session; never persist it in `.codex/config.toml` or any other configuration.
 
 5. Report the connected board URL and project id. The bundled app.mcp is ready in this session; no MCP registration or restart is required.

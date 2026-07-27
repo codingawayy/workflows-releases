@@ -21,7 +21,7 @@ Input the user provided: `$ARGUMENTS`
    `attemptId`. If either operation fails, report its safe error and leave the repository unconfigured.
 
 4. Only after the personal credential is ready, merge `{ "projectId": "<projectId>" }` into this repository's
-   `.workflows/config.json`, preserving existing `verify` and `worktreeSetup` fields. This repository file
+   `.workflows/config.json`, preserving existing `verify` and `setup` fields. This repository file
    contains no credential.
 
 5. Report the connected board URL and project id. The user may need to restart Claude Code or run `/mcp`
