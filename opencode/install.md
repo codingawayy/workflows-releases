@@ -14,6 +14,12 @@ you a **board URL** (`apiUrl`), a **project id** (`projectId`), and a **scope** 
   server.
 - **Connection** — a per-machine board/auth-binding file and a per-repo project-id file.
 
+The harness that executes autonomous workflow leaves is selected separately from the OpenCode
+client used to steer Workflows. The canonical
+[repository harness-profile examples](https://github.com/codingawayy/workflows-releases/tree/main/examples/harness-profiles)
+cover Claude Code, Codex, and OpenCode and explain how to copy one into
+`.workflows/harness-profiles/`.
+
 ## Where things go (depends on scope)
 
 The user's one-liner named a scope: **global** or **per-repo**.

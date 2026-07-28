@@ -34,6 +34,13 @@ claude --plugin-dir build/plugin
 PATH, the `workflows` server shows as failed under `/mcp` with a generic spawn error; install Bun from
 [bun.sh](https://bun.sh), reopen your shell, and reload Claude Code.
 
+## Configure the autonomous harness
+
+The harness that executes autonomous workflow leaves is selected separately from the Claude Code
+plugin used to steer Workflows. Use the canonical
+[repository harness-profile examples](https://github.com/codingawayy/workflows-releases/tree/main/examples/harness-profiles)
+to copy a Claude Code, Codex, or OpenCode profile into `.workflows/harness-profiles/`.
+
 ## Connect
 
 The plugin carries the intelligence and the MCP registration; it does **not** bake in a credential or a

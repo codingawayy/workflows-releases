@@ -1,0 +1,26 @@
+{
+  "name": "Codex",
+  "harness": "codex",
+  "runProfiles": {
+    "default": {
+      "options": {
+        "model_reasoning_effort": "medium"
+      }
+    },
+    "implementation": {
+      "options": {
+        "model_reasoning_effort": "high"
+      }
+    },
+    "ui-validation": {
+      "options": {
+        "model_reasoning_effort": "medium"
+      }
+    },
+    "workflow-documentation": {
+      "options": {
+        "model_reasoning_effort": "medium"
+      }
+    }
+  }
+}

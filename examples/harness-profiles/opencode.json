@@ -1,0 +1,42 @@
+{
+  "name": "OpenCode",
+  "harness": "opencode",
+  "runProfiles": {
+    "default": {
+      "options": {
+        "agent": {
+          "build": {
+            "steps": 50
+          }
+        }
+      }
+    },
+    "implementation": {
+      "options": {
+        "agent": {
+          "build": {
+            "steps": 100
+          }
+        }
+      }
+    },
+    "ui-validation": {
+      "options": {
+        "agent": {
+          "build": {
+            "steps": 50
+          }
+        }
+      }
+    },
+    "workflow-documentation": {
+      "options": {
+        "agent": {
+          "build": {
+            "steps": 50
+          }
+        }
+      }
+    }
+  }
+}

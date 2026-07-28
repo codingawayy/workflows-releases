@@ -1,0 +1,26 @@
+{
+  "name": "Claude Code",
+  "harness": "claude-code",
+  "runProfiles": {
+    "default": {
+      "options": {
+        "effortLevel": "medium"
+      }
+    },
+    "implementation": {
+      "options": {
+        "effortLevel": "high"
+      }
+    },
+    "ui-validation": {
+      "options": {
+        "effortLevel": "medium"
+      }
+    },
+    "workflow-documentation": {
+      "options": {
+        "effortLevel": "medium"
+      }
+    }
+  }
+}
