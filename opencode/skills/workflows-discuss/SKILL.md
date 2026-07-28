@@ -19,7 +19,8 @@ for that item, load this complete snapshot without taking any claim:
 
 - `get_item` — status, the available `moves`, dependencies, children, parent, and the claim
   fields (`claimed_by`, `claim_phase`).
-- `read_artifact` for each name in `artifacts` — the item's actual deliverables.
+- `read_artifact` for each name in `artifacts` — the item's actual deliverables. Each returns
+  `{ content, stamp }`; **keep the stamp** — rewriting that document later requires it.
 - `get_questions` — the full dialogue log (clarifications, steer reasons, notes), oldest-first.
 
 Retain that snapshot and subsequent tool results in the conversation. A later user message or
@@ -68,13 +69,15 @@ keeps the generative act inside the pipeline. In order of preference:
    `kind: "stepped"` move): with the user's go-ahead, call `next_step({ item, transition })` and
    follow each response's `guidance` verbatim, submitting via `submit_step` as it directs — the
    server owns the sequencing. The user is present, so work any interactive step through with them.
-4. **Rewrite a document directly** — `write_artifact` with a required `reason`. This is the
-   exception path: use it when the change is genuinely an *edit to an existing deliverable* the
-   discussion has settled, not new work a transition should produce. Show the user what you're
-   about to write (the change, not necessarily the whole document) and get their yes first. The
-   `reason` (a one-line why) is mandatory and is recorded structurally: the system writes an `edit`
-   round on the Q&A thread and the board badges the document as edited outside a transition — so
-   you no longer hand-write a separate provenance note, the reason IS the record.
+4. **Rewrite a document directly** — `write_artifact` with a required `reason` and the `stamp` you
+   read. This is the exception path: use it when the change is genuinely an *edit to an existing
+   deliverable* the discussion has settled, not new work a transition should produce. Show the user
+   what you're about to write (the change, not necessarily the whole document) and get their yes
+   first. The `reason` (a one-line why) is mandatory and is recorded structurally: the system writes
+   an `edit` round on the Q&A thread and the board badges the document as edited outside a
+   transition — so you no longer hand-write a separate provenance note, the reason IS the record.
+   The `stamp` is the one you got from `read_artifact` (`null` for a document that does not exist
+   yet); the write lands only while it still matches, and there is no force-overwrite.
 
 ## 4. When a write is refused
 
@@ -82,3 +85,9 @@ A `RunClaimHeld` refusal means a live run holds the item. Report who holds it (`
 `claim_phase`), keep the discussion going, and offer to retry the write once the run ends.
 Never call `release_claim` or stop the run just to push a chat write through — interrupting a
 run is the user's explicit decision, not a write-retry tactic.
+
+An `ArtifactConflict` means the document changed after you read it, so **nothing was stored**. Do not
+retry the same body — it will be refused again. The error carries the document's current stamp AND its
+current content: show the user what changed, merge the settled edit into that current content, and call
+`write_artifact` again with the new stamp. You are the right place to resolve this — the user is present
+and can say which version wins.

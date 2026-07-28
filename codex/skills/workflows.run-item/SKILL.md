@@ -76,6 +76,13 @@ iteration handles exactly one response.
   holds your now-stale draft). Re-read that refreshed document file, re-apply your changes on top, write
   the full updated document to `output` again, and call **`submit_step`** again — **do not** call
   `next_step`, and **do not** overwrite the other run's update. Stay in this re-submit loop until it lands.
+- **`artifact-conflict`** — one of the ITEM's own documents (an artifact this transition publishes) changed
+  after this session read it, so the finish stored **nothing at all**: no document, no status advance. The
+  server refreshed that artifact's file in the work dir to its current content, and the response carries
+  that content too. Re-read it, merge what this transition produced into it, write the merged result back
+  to the same **publish** file the step wrote, and call **`submit_step`** again — the claim is still held,
+  so a re-submit picks up where you were. **Never `cancel_execution` here**: that discards the work dir,
+  and with it everything this run composed.
 - **`gate-exhausted`** — the gate-loop hit its `maxRounds` cap with findings still open; nothing advanced.
   **Stop the loop** and report the open findings; the user resolves them and resets the transition, or runs it
   headless.
