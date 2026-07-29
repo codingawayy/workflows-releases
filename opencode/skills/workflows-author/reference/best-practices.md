@@ -66,8 +66,10 @@ neither capped nor recorded.
 - **`produces` artifacts** are per-item deliverables (the `problem`, `analysis`, `summary`). Declare one
   per transition that lands a deliverable; name them in domain terms.
 - **`documents`** are cross-item, workflow-scoped, versioned knowledge (a running `lessons` doc). Use
-  one when the workflow should improve run-over-run. A `leaf`/`interactive` step rewrites it via
-  `writesDocument` (the engine writes it conflict-safely).
+  one when the workflow should improve run-over-run. A step rewrites one by EDITING the working copy its
+  `{{name}}` placeholder points at — no step declares which document it writes; the engine writes back
+  whatever the step changed, version-guarded. So say in the step's prompt that it should read that
+  document and edit it in place.
 - Keep each document's audience and purpose distinct — don't make one document serve two readers at two
   altitudes; split it.
 

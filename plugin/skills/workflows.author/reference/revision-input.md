@@ -12,15 +12,39 @@ table and artifact ownership from what you declare; you never write those direct
 {
   "transitions": [ /* the state machine — the edges (see below) */ ],
   "artifacts":   [ "problem", "analysis", "summary" ],   // the {{...}} document namespace
-  "documents":   [ "lessons" ],                          // cross-item workflow docs (shared, versioned)
   "offChainStatuses": [],                                // statuses NO transition touches (usually empty)
   "statusDisplay": [ { "name": "proposed", "label": "Proposed", "color": "#888", "ordinal": 0 } ] // optional board metadata + column order
 }
 ```
 
-The revision is PURELY the state machine (transitions, artifacts, documents, offChainStatuses,
-statusDisplay). The **input contract** (`itemEntryCriteria` + `entryDocumentGuidance`) is NOT part of
-`input` — it is plain workflow-registry metadata set separately via `create_workflow` / `update_workflow`
+The revision is PURELY the state machine (transitions, artifacts, offChainStatuses, statusDisplay). An
+unknown top-level key is refused, not ignored.
+
+## Workflow documents are NOT in `input`
+
+A **workflow document** (cross-item knowledge like a lessons file) is shared by every revision and every
+item and read fresh on each run — so no revision declares one, and `input` has no `documents` field.
+A document name enters the workflow one of two ways:
+
+- **`ensureDocuments`**, a sibling argument of `input` on `set_workflow_definition` — the names this
+  write brings into existence. A name the workflow already owns is a no-op, so it is safe to repeat.
+- **its own first write**, through `write_workflow_document`.
+
+No step declares which document it writes: a document a step EDITS is written back because its content
+moved. So a document is brought into existence by the write that first needs it:
+
+```jsonc
+{
+  "workflow": "backlog",
+  "ensureDocuments": [ "lessons" ],
+  "input": { /* … a step whose prompt reads and edits {{lessons}} … */ }
+}
+```
+
+Documents and artifacts share one flat `{{...}}` namespace, so a name may not be both.
+
+The **input contract** (`itemEntryCriteria` + `entryDocumentGuidance`) is likewise NOT part of `input` —
+it is plain workflow-registry metadata set separately via `create_workflow` / `update_workflow`
 (see `reference/best-practices.md`), never through `set_workflow_definition`.
 
 `statusDisplay[].ordinal` is the board's column order — omit it (or pass `null`) and the store fills it
@@ -77,8 +101,7 @@ Key rules the store enforces (it rejects a violation with a clear message):
   "systemPrompt": "...",    // the step's instructions (its role + how to do the work)
   "userPrompt": "...",      // the task: what to read, what to write, the {{placeholders}} it uses
   "schemaJson": "{...}",    // JSON-schema string for the step's structured return
-  "writesDocument": "lessons", // (leaf/interactive only) the cross-item document this step rewrites
-  "tools": ["Read", "Grep"],   // the allowlist of tools the leaf may use
+  "runProfile": "implementation",  // the repository run profile this step runs under; omit for the default
   // kind-specific:
   "over": "01-analyze.lenses",        // (fanout) the prior step's array field to fan out over
   "runWhen": "01-analyze.reviewApplies", // run this step only when a prior boolean field is truthy
@@ -97,10 +120,27 @@ Key rules the store enforces (it rejects a violation with a clear message):
 - **`gate-loop`** — runs, checks `gateField`; if non-empty, runs `fixWith` and re-checks, up to
   `maxRounds`. A bounded review→fix loop.
 
-**Placeholders** the prompts use (resolved at run time): `{{itemDir}}`, `{{deliverable}}` (the path the
-transition's produced artifact is ingested from), `{{output}}` (an intermediate path), `{{questions}}`,
-`{{<artifactName>}}` (a prior document, e.g. `{{problem}}`), `{{in:<stepKey>}}` /
-`{{inDir:<stepKey>}}` (a prior step's output), `{{member.<field>}}` (a fanout member's fields).
+A step declares no model, effort, or tool list — those are repository-owned. `runProfile` names one of
+the repository's profiles semantically (`implementation`, `ui-validation`, … — the machine resolves what
+each one means); omit it for the repository default. Declaring `model`, `effort`, or `tools` is rejected.
+
+**Placeholders** the prompts use (resolved at run time). Every one is a path the engine DERIVES, so a
+step never authors a filename:
+
+| Placeholder | Resolves to |
+| --- | --- |
+| `{{<artifactName>}}` | the item's artifact as an editable **working copy**, e.g. `{{problem}}` — the file a step reads is the file it writes, and whatever moved is published when the step returns |
+| `{{<documentName>}}` | a workflow-scoped document (`{{lessons}}`), same treatment |
+| `{{output}}` | this step's own output file — one per member in a fanout |
+| `{{scratch}}` | this step's scratch directory, for whatever it merely uses; dropped once the step completes |
+| `{{in:<stepKey>}}` / `{{inDir:<stepKey>}}` | a prior step's output file / a fanout's member directory |
+| `{{questions}}` | the item's Q&A thread — read-only; a step adds to it by returning `needs-clarification` |
+| `{{verifyFailure}}` | what the failed verify check said, for a heal step |
+| `{{member.<field>}}` | a fanout member's field — the only placeholder yielding a value rather than a path |
+| `{{itemDir}}` | the item's work dir. Prefer never to use it: everything a step legitimately reads or writes has its own derived reference above, and a path built by hand is one the engine does not know about |
+
+A placeholder the engine cannot fill throws when the step is dispatched, so a name must match a declared
+artifact or document exactly. `{{deliverable}}` is retired and rejected at save.
 
 ## What you do NOT declare
 
