@@ -30,7 +30,7 @@ This prose is the single biggest lever on output quality. Write it as you would 
 colleague who starts cold:
 
 - **State the job and the cold start.** Each step is a fresh agent with no memory of prior steps —
-  tell it what to read (`{{problem}}`, `{{in:01-...}}`) to ground itself.
+  tell it what to read (`{{path.item.artifact:problem}}`, `{{path.step:01-...}}`) to ground itself.
 - **Say what "good" looks like and when to stop.** Give the bar, not just the task. Scale effort to the
   item: "length should match the item's size; bias briefer."
 - **Make the deliverable structure explicit.** If the step writes a document, specify its sections and
@@ -67,7 +67,7 @@ neither capped nor recorded.
   per transition that lands a deliverable; name them in domain terms.
 - **`documents`** are cross-item, workflow-scoped, versioned knowledge (a running `lessons` doc). Use
   one when the workflow should improve run-over-run. A step rewrites one by EDITING the working copy its
-  `{{name}}` placeholder points at — no step declares which document it writes; the engine writes back
+  `{{path.workflow.document:<name>}}` reference points at — no step declares which document it writes; the engine writes back
   whatever the step changed, version-guarded. So say in the step's prompt that it should read that
   document and edit it in place.
 - Keep each document's audience and purpose distinct — don't make one document serve two readers at two

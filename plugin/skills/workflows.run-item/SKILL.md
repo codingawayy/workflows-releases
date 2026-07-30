@@ -69,7 +69,7 @@ iteration handles exactly one response.
   item's Q&A thread), they can re-invoke `/workflows:run-item` to resume.
 - **`conflict`** — a document-writing step's target workflow document changed underneath you between read
   and write; nothing was recorded. The server refreshed the **document file** in the work dir to the
-  current content (this is the `{{<name>}}` input your prompt references — NOT the `output` file, which
+  current content (this is the `{{path.workflow.document:<name>}}` input your prompt references — NOT the `output` file, which
   holds your now-stale draft). Re-read that refreshed document file, re-apply your changes on top, write
   the full updated document to `output` again, and call **`submit_step`** again — **do not** call
   `next_step`, and **do not** overwrite the other run's update. Stay in this re-submit loop until it lands.

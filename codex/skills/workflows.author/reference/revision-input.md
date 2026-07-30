@@ -11,7 +11,7 @@ table and artifact ownership from what you declare; you never write those direct
 ```jsonc
 {
   "transitions": [ /* the state machine — the edges (see below) */ ],
-  "artifacts":   [ "problem", "analysis", "summary" ],   // the {{...}} document namespace
+  "artifacts":   [ "problem", "analysis", "summary" ],   // the item-artifact namespace
   "offChainStatuses": [],                                // statuses NO transition touches (usually empty)
   "statusDisplay": [ { "name": "proposed", "label": "Proposed", "color": "#888", "ordinal": 0 } ] // optional board metadata + column order
 }
@@ -37,11 +37,9 @@ moved. So a document is brought into existence by the write that first needs it:
 {
   "workflow": "backlog",
   "ensureDocuments": [ "lessons" ],
-  "input": { /* … a step whose prompt reads and edits {{lessons}} … */ }
+  "input": { /* … a step whose prompt reads and edits {{path.workflow.document:lessons}} … */ }
 }
 ```
-
-Documents and artifacts share one flat `{{...}}` namespace, so a name may not be both.
 
 The **input contract** (`itemEntryCriteria` + `entryDocumentGuidance`) is likewise NOT part of `input` —
 it is plain workflow-registry metadata set separately via `create_workflow` / `update_workflow`
@@ -99,7 +97,7 @@ Key rules the store enforces (it rejects a violation with a clear message):
   "key": "01-analyze",      // natural key within the transition; over/runWhen/fixWith reference it
   "kind": "leaf",           // leaf | fanout | gate-loop | interactive
   "systemPrompt": "...",    // the step's instructions (its role + how to do the work)
-  "userPrompt": "...",      // the task: what to read, what to write, the {{placeholders}} it uses
+  "userPrompt": "...",      // the task: what to read, what to write, the references it uses
   "schemaJson": "{...}",    // JSON-schema string for the step's structured return
   "runProfile": "implementation",  // the repository run profile this step runs under; omit for the default
   // kind-specific:
@@ -124,23 +122,31 @@ A step declares no model, effort, or tool list — those are repository-owned. `
 the repository's profiles semantically (`implementation`, `ui-validation`, … — the machine resolves what
 each one means); omit it for the repository default. Declaring `model`, `effort`, or `tools` is rejected.
 
-**Placeholders** the prompts use (resolved at run time). Every one is a path the engine DERIVES, so a
-step never authors a filename:
+**References** the prompts use (resolved at run time). Every one is a path the engine DERIVES, so a step
+never authors a filename — and every one names the KIND of thing it points at, so the three vocabularies
+sharing this syntax cannot collide:
 
-| Placeholder | Resolves to |
+| Reference | Resolves to |
 | --- | --- |
-| `{{<artifactName>}}` | the item's artifact as an editable **working copy**, e.g. `{{problem}}` — the file a step reads is the file it writes, and whatever moved is published when the step returns |
-| `{{<documentName>}}` | a workflow-scoped document (`{{lessons}}`), same treatment |
-| `{{output}}` | this step's own output file — one per member in a fanout |
-| `{{scratch}}` | this step's scratch directory, for whatever it merely uses; dropped once the step completes |
-| `{{in:<stepKey>}}` / `{{inDir:<stepKey>}}` | a prior step's output file / a fanout's member directory |
-| `{{questions}}` | the item's Q&A thread — read-only; a step adds to it by returning `needs-clarification` |
-| `{{verifyFailure}}` | what the failed verify check said, for a heal step |
-| `{{member.<field>}}` | a fanout member's field — the only placeholder yielding a value rather than a path |
-| `{{itemDir}}` | the item's work dir. Prefer never to use it: everything a step legitimately reads or writes has its own derived reference above, and a path built by hand is one the engine does not know about |
+| `{{path.item.artifact:<name>}}` | the item's artifact as an editable **working copy**, e.g. `{{path.item.artifact:problem}}` — the file a step reads is the file it writes, and whatever moved is published when the step returns |
+| `{{path.workflow.document:<name>}}` | a workflow-scoped document (`{{path.workflow.document:lessons}}`), same treatment |
+| `{{path.step:<stepKey>}}` | a prior step's output — its file, or its member directory when that step is a fanout |
+| `{{path.run.output}}` | this step's own output file — one per member in a fanout |
+| `{{path.run.scratch}}` | this step's scratch directory, for whatever it merely uses; dropped once the step completes |
+| `{{path.run.questions}}` | the item's Q&A thread — read-only; a step adds to it by returning `needs-clarification` |
+| `{{path.run.verifyFailure}}` | what the failed verify check said, for a heal step |
+| `{{path.run.itemDir}}` | the item's work dir. Prefer never to use it: everything a step legitimately reads or writes has its own derived reference above, and a path built by hand is one the engine does not know about |
+| `{{value.member:<field>}}` | a fanout member's field — the only reference yielding a value rather than a path |
 
-A placeholder the engine cannot fill throws when the step is dispatched, so a name must match a declared
-artifact or document exactly. `{{deliverable}}` is retired and rejected at save.
+Because the kind is part of the reference, an artifact and a document may share a name, and either may
+be called `output` or `questions`. `path.` and `value.` are the two roots: `path.` names a location,
+`value.` a scalar.
+
+Every reference is checked when the definition is SAVED: one naming something its kind does not declare
+is refused, with every offender listed at once. The two exceptions are `{{value.member:<field>}}` —
+nothing declares a fanout member's fields, so it is checked only when the prompt renders — and
+`{{deliverable}}`, which is retired and rejected outright. A reference to a step in a DIFFERENT
+transition is refused: only this transition's steps resolve.
 
 ## What you do NOT declare
 
