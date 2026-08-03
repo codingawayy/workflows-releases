@@ -73,7 +73,7 @@ first principles — not "is it built well?" but "does it cohere and deserve to 
   effort, which is right for most steps. Override *upward* (a stronger model, higher effort) for a
   genuinely hard step — deep synthesis, a load-bearing review gate — where a weak pass quietly degrades
   every document downstream. Be wary of *downgrades*: a too-weak step produces plausible-but-worse output
-  with **no error and no feedback loop** — the failure is invisible until a human reads the deliverable —
+  with **no error and no feedback loop** — the failure is invisible until a human reads the document —
   so only drop a step's strength when its work is genuinely mechanical (boilerplate, formatting).
 
 When in doubt, ship the simpler shape and let the customer ask for more.

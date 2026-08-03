@@ -53,7 +53,7 @@ order the derivation wouldn't produce on its own (e.g. a status reachable only t
 
 ```jsonc
 {
-  "name": "analyze-item",          // unique, kebab-case; this is the artifact-keyed name
+  "name": "analyze-item",          // unique, kebab-case; the name `next_step` / `submit_step` take to address this transition
   "ordinal": 2,                    // authoring/pipeline order (a board-order hint)
   "statusIn": "proposed",          // the status it leaves FROM; omit ONLY on the single entry transition
   "statusOut": "analyzed",         // the status it lands ON
@@ -63,7 +63,6 @@ order the derivation wouldn't produce on its own (e.g. a status reachable only t
   "auto": true,                    // engine auto-advances through it when an item rests at statusIn
   "routerCondition": "...",        // prose the router reads to pick this edge among a status's exits
   "removes": ["analysis"],         // opt-in: documents this edge deletes when taken (never a movement condition)
-  "produces": "analysis",          // the artifact this transition's deliverable IS
   "steps": [ /* ordered steps, for an autonomous transition */ ]
 }
 ```
@@ -71,15 +70,14 @@ order the derivation wouldn't produce on its own (e.g. a status reachable only t
 Key rules the store enforces (it rejects a violation with a clear message):
 
 - **Exactly one entry transition** — the one with no `statusIn` (the store requires exactly one, with a
-  `statusOut`). By convention it `produces` the entry document that `create_item`'s `entryDocument`
-  writes — that coupling is applied by `create_item`, not the revision validator.
+  `statusOut`). Which document a freshly captured item arrives carrying is the revision-level
+  `entryDocument` name, applied by `create_item` — not anything the entry transition declares.
 - **`auto` vs human-started.** `auto: true` marks a transition as its source status's automatic exit —
   the engine advances an item through it without asking. Omit `auto` and the status is *human-resting*:
   the engine never starts the transition on its own (a human does, e.g. from the board). A transition
   containing an `interactive` step is human-LED regardless (a human runs it) and must not be `auto`.
 - **At most one `auto` exit per status.** A status may fork into several exits, but only one may be the
   automatic one. Multiple non-auto exits are `routerCondition`-routed (the router picks) or human-started.
-- **`produces` names a declared artifact**, and each artifact is produced by at most one transition.
 - **`removes` names declared artifacts to delete when the edge is taken** — an opt-in effect, never a
   condition of movement (there is no "backward edge" concept). An edge with none leaves its documents in
   place until a re-run overwrites them; the only guards are that each name is declared and none repeats.

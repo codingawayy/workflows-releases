@@ -28,10 +28,10 @@ The backlog idiom: a chain of autonomous transitions, each producing a document 
 
 ```
 add-item (interactive, → proposed)
-  ──auto──▶ analyze-item (leaf, proposed → analyzed)        produces: analysis
+  ──auto──▶ analyze-item (leaf, proposed → analyzed)        its step edits the analysis document
             finalize-design (interactive, analyzed → designed)   ← the human gate (go/no-go/drop/send-back)
-  ──auto──▶ plan-implementation (leaf, designed → planned)  produces: plan
-  ──auto──▶ implement (isolated, planned → implemented)     produces: summary
+  ──auto──▶ plan-implementation (leaf, designed → planned)  its step edits the plan document
+  ──auto──▶ implement (isolated, planned → implemented)     its step edits the summary document
 ```
 
 - Each autonomous stage is `auto` so the pipeline flows; the one interactive stage is where a human

@@ -63,8 +63,10 @@ neither capped nor recorded.
 
 ## Documents — the steering surface
 
-- **`produces` artifacts** are per-item deliverables (the `problem`, `analysis`, `summary`). Declare one
-  per transition that lands a deliverable; name them in domain terms.
+- **`artifacts`** are the per-item documents (the `problem`, `analysis`, `summary`). Declare every name
+  once, in `input.artifacts`, in domain terms — a name belongs to the workflow, not to a transition. A
+  step lands one by EDITING the working copy its `{{path.item.artifact:<name>}}` reference points at,
+  exactly as it does a workflow document.
 - **`documents`** are cross-item, workflow-scoped, versioned knowledge (a running `lessons` doc). Use
   one when the workflow should improve run-over-run. A step rewrites one by EDITING the working copy its
   `{{path.workflow.document:<name>}}` reference points at — no step declares which document it writes; the engine writes back
@@ -87,10 +89,10 @@ neither capped nor recorded.
 
 ## Terminal outcomes — how work ends
 
-- Model every way an item legitimately ends. A natural completion is a `produces` terminal (an item
-  lands at `implemented`/`closed` with its final document). An abandonment is a **drop edge**: a
+- Model every way an item legitimately ends. A natural completion is the ordinary end of the chain (an
+  item lands at `implemented`/`closed` with its final document). An abandonment is a **drop edge**: a
   step-less manual transition to a terminal status (`dropped`) that a human takes from the board.
-- A terminal a transition *produces* (e.g. `dropped` reached by a `drop` edge) is NOT an
+- A terminal a transition *reaches* (e.g. `dropped` reached by a `drop` edge) is NOT an
   `offChainStatus`. Use `offChainStatuses` only for a status no transition touches.
 - Don't over-model endings. One drop path and one natural completion cover most workflows.
 
