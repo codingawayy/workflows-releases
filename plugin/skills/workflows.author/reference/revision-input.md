@@ -134,17 +134,22 @@ sharing this syntax cannot collide:
 | `{{path.run.questions}}` | the item's Q&A thread — read-only; a step adds to it by returning `needs-clarification` |
 | `{{path.run.verifyFailure}}` | what the failed verify check said, for a heal step |
 | `{{path.run.itemDir}}` | the item's work dir. Prefer never to use it: everything a step legitimately reads or writes has its own derived reference above, and a path built by hand is one the engine does not know about |
-| `{{value.member:<field>}}` | a fanout member's field — the only reference yielding a value rather than a path |
+| `{{value.item.id}}` | the id of the item this step run is about (`B247`) — say this when a prompt needs to name the item, rather than handing it a directory |
+| `{{value.member:<field>}}` | a fanout member's field — the one reference nothing declares |
 
 Because the kind is part of the reference, an artifact and a document may share a name, and either may
 be called `output` or `questions`. `path.` and `value.` are the two roots: `path.` names a location,
 `value.` a scalar.
 
 Every reference is checked when the definition is SAVED: one naming something its kind does not declare
-is refused, with every offender listed at once. The two exceptions are `{{value.member:<field>}}` —
-nothing declares a fanout member's fields, so it is checked only when the prompt renders — and
-`{{deliverable}}`, which is retired and rejected outright. A reference to a step in a DIFFERENT
-transition is refused: only this transition's steps resolve.
+is refused, with every offender listed at once, each naming what its kind does declare. A reference to a
+step in a DIFFERENT transition is refused: only this transition's steps resolve. So is a reference to no
+kind at all — an old spelling such as `{{deliverable}}` names nothing the engine fills, and is refused
+like any other.
+
+The one exception is `{{value.member:<field>}}`: nothing declares a fanout member's fields, so it is
+checked when the prompt renders — before the step is dispatched, saying which member index was being
+rendered and which fields that member carried.
 
 ## What you do NOT declare
 
