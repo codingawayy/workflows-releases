@@ -144,8 +144,8 @@ be called `output` or `questions`. `path.` and `value.` are the two roots: `path
 Every reference is checked when the definition is SAVED: one naming something its kind does not declare
 is refused, with every offender listed at once, each naming what its kind does declare. A reference to a
 step in a DIFFERENT transition is refused: only this transition's steps resolve. So is a reference to no
-kind at all — an old spelling such as `{{deliverable}}` names nothing the engine fills, and is refused
-like any other.
+kind at all — a bare name such as `deliverable`, with no kind in front of it, names nothing the engine
+fills, and is refused like any other.
 
 The one exception is `{{value.member:<field>}}`: nothing declares a fanout member's fields, so it is
 checked when the prompt renders — before the step is dispatched, saying which member index was being
