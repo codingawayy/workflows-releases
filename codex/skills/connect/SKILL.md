@@ -1,5 +1,5 @@
 ---
-name: workflows.connect
+name: connect
 description: Use when connecting a repository and machine to a Workflows board.
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: workflows.author
+name: author
 description: Use when creating or changing a workflow definition, including its transitions, steps, documents, conditions, outcomes, or input contract.
 ---
 

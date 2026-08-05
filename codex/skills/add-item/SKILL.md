@@ -1,5 +1,5 @@
 ---
-name: workflows.add-item
+name: add-item
 description: Use when capturing work in the tracker, breaking it into items, routing each item to a workflow, or recording dependencies and epics.
 ---
 
