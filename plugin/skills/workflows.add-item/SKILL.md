@@ -47,7 +47,8 @@ you must know the workflow before you write the document.
 
 Size each item's grain so a fresh agent (or a human) can pick it up from its entry document **with no
 other context**. Grain is decided by what makes a clean cold-start unit — *not* by how it will be
-executed. The execution mode (agent-driven, human-driven, isolated) does not branch the grain decision;
+executed. How it runs (agent-driven, human-driven, in a checkout that can run the code) does not branch
+the grain decision;
 record the same well-scoped item regardless of who or what will work it.
 
 ## The human gate — proportional, and per caller
