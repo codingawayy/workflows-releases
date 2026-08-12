@@ -5,8 +5,9 @@ covers: the typed `input` shape passed to set_workflow_definition — every fiel
 # The typed authoring shape (`input`)
 
 `set_workflow_definition` takes one object, `input`, the whole definition. `read_workflow_definition`
-returns this exact shape for editing — read, modify the object, resubmit. The store derives the status
-table and artifact ownership from what you declare; you never write those directly.
+returns `{ input, definitionStamp }` for editing — modify `input`, then resubmit it with the opaque
+`definitionStamp` unchanged. The store derives the status table and artifact ownership from what you
+declare; you never write those directly.
 
 ```jsonc
 {
@@ -36,6 +37,7 @@ moved. So a document is brought into existence by the write that first needs it:
 ```jsonc
 {
   "workflow": "backlog",
+  "definitionStamp": "opaque-stamp-from-read",
   "ensureDocuments": [ "lessons" ],
   "input": { /* … a step whose prompt reads and edits {{path.workflow.document:lessons}} … */ }
 }
