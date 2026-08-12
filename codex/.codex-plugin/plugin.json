@@ -1,7 +1,7 @@
 {
   "name": "workflows",
-  "version": "0.1.119",
-  "description": "Record, route, author, discuss, and drive workflow work from Codex.",
+  "version": "0.1.121",
+  "description": "Record, route, author, discuss, unblock, and drive workflow work from Codex.",
   "author": {
     "name": "Workflows"
   },
@@ -11,7 +11,7 @@
   "interface": {
     "displayName": "Workflows",
     "shortDescription": "Drive structured workflow items from Codex.",
-    "longDescription": "Record, route, author, discuss, and drive document-producing workflow items over the Workflows MCP server.",
+    "longDescription": "Record, route, author, discuss, unblock, and drive document-producing workflow items over the Workflows MCP server.",
     "developerName": "Workflows",
     "category": "Productivity",
     "capabilities": [
