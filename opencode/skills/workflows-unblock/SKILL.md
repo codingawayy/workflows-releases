@@ -49,14 +49,18 @@ Immediately before asking for final approval, refresh this item:
 2. Call `get_item` to refresh its status, claim fields, artifact names, and current `moves`.
 3. For `unblock-stop`, call `get_item_supervision` and use only the current open episode's
    `unblock.allowVersion`. If `unblock.pass` is present, require the user to choose exactly `keep` or
-   `start-over` and explain that choice; omit `passChoice` only when no pass is open.
+   `start-over` and explain that choice; omit `passChoice` only when no pass is open. Separately offer the
+   optional launch-repair prompt: blank means ordinary scheduling, while non-blank text is stored verbatim
+   and authorizes exactly one repair attempt before one workflow launch. It does not choose a machine or
+   alter Keep versus Start over.
 4. For `amend-routing-input`, call `read_artifact` again for the selected artifact and use that returned
    `stamp`, current content, the full proposed replacement content, and one non-blank reason.
 
 If the action disappeared, its effects/blockers changed, its transition is absent from current `moves`, or a
 blocker is present, do not ask for approval from stale facts. Report the change and return to one-item
 deliberation. Otherwise state, in one approval prompt: the exact action and item, every current effect and
-blocker (including an empty blocker list), the exact rationale, and any pass choice or full document change.
+blocker (including an empty blocker list), the exact rationale, any pass choice or full document change, and
+either the exact launch-repair text or that no repair is authorized.
 Proceed only on an explicit yes to that complete prompt; an invocation or earlier general instruction is not
 approval.
 
@@ -65,9 +69,9 @@ approval.
 Map only these known action kinds. The operation that owns the change also owns its audit; never add a second
 `append_question`, raw `set_status`, or other duplicate write.
 
-- `unblock-stop` — call `unblock_item` once with the refreshed `allowVersion`, rationale, and a pass choice
-  only when the refreshed `unblock.pass` is present. This is the only stop action. It neither launches a run
-  nor changes status or published artifacts;
+- `unblock-stop` — call `unblock_item` once with the refreshed `allowVersion`, rationale, the approved
+  `repairPrompt` only when non-blank, and a pass choice only when the refreshed `unblock.pass` is present.
+  This is the only stop action. It neither launches a run nor changes status or published artifacts;
   it may also clear the matching routing decline named in `effects`.
 - `retry-routing` — call `retry_routing` once with the descriptor's exact `expectedRoutingVersion` and the
   approved non-blank rationale. It changes no routing input and launches no run.
