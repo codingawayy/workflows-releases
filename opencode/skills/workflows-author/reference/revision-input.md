@@ -1,13 +1,15 @@
 ---
-covers: the typed `input` shape passed to set_workflow_definition — every field and how the pieces fit
+covers: the typed definition shape passed to workflow authoring verbs — every field and how the pieces fit
 ---
 
 # The typed authoring shape (`input`)
 
-`set_workflow_definition` takes one object, `input`, the whole definition. `read_workflow_definition`
-returns `{ input, definitionStamp }` for editing — modify `input`, then resubmit it with the opaque
-`definitionStamp` unchanged. The store derives the status table and artifact ownership from what you
-declare; you never write those directly.
+The definition authoring verbs take one whole typed object: `create_workflow` calls it `definition`, while
+`set_workflow_definition` and `replace_workflow_definition` call it `input`.
+`read_workflow_definition` returns `{ input, definitionStamp }` for regular editing — modify `input`, then
+resubmit it through `set_workflow_definition` with the opaque `definitionStamp` unchanged. That stamped
+verb edits only; it never creates. The store derives the status table and artifact ownership from what
+you declare, so you never write those directly.
 
 ```jsonc
 {
@@ -27,8 +29,9 @@ A **workflow document** (cross-item knowledge like a lessons file) is shared by 
 item and read fresh on each run — so no revision declares one, and `input` has no `documents` field.
 A document name enters the workflow one of two ways:
 
-- **`ensureDocuments`**, a sibling argument of `input` on `set_workflow_definition` — the names this
-  write brings into existence. A name the workflow already owns is a no-op, so it is safe to repeat.
+- **`ensureDocuments`**, a sibling of the definition on `create_workflow`,
+  `set_workflow_definition`, and `replace_workflow_definition` — the names that aggregate write brings
+  into existence. A name the workflow already owns is a no-op, so it is safe to repeat.
 - **its own first write**, through `write_workflow_document`.
 
 No step declares which document it writes: a document a step EDITS is written back because its content
@@ -43,9 +46,10 @@ moved. So a document is brought into existence by the write that first needs it:
 }
 ```
 
-The **input contract** (`itemEntryCriteria` + `entryDocumentGuidance`) is likewise NOT part of `input` —
-it is plain workflow-registry metadata set separately via `create_workflow` / `update_workflow`
-(see `reference/best-practices.md`), never through `set_workflow_definition`.
+The **input contract** (`itemEntryCriteria` + `entryDocumentGuidance`) is likewise NOT part of the typed
+definition. It is plain workflow-registry metadata supplied alongside the required definition in a new
+workflow's `create_workflow` call, or changed later with `update_workflow` (see
+`reference/best-practices.md`), never through `set_workflow_definition`.
 
 `statusDisplay[].ordinal` is the board's column order — omit it (or pass `null`) and the store fills it
 from the graph's pipeline shape, so you never have to compute it by hand; set it explicitly only to pin an

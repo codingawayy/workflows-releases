@@ -37,22 +37,26 @@ hand them a blank slate and ask them to design a state machine.
    conditions, terminal outcomes) and the field-by-field contract in `reference/revision-input.md`.
    Always author the workflow's **input contract** (`itemEntryCriteria` + `entryDocumentGuidance`) too —
    it is what the add-item skill routes and records against, and a workflow without it gives that skill no bar.
-   The input contract is plain workflow-registry metadata set via `create_workflow` / `update_workflow`,
-   NOT part of the revision `input` (see `reference/best-practices.md`).
+   The input contract is plain workflow-registry metadata supplied with `create_workflow` for a new
+   workflow or changed via `update_workflow` later, NOT part of the revision `input` (see
+   `reference/best-practices.md`).
 4. **Propose, then gate.** Authoring or changing a workflow is a high-impact, gated action — never write
    silently. Show the customer the shape (a short transition list / small diagram), call out the
    trade-offs and what each step costs, and **wait for approval**. Surface one real decision at a time.
-5. **Write.** On approval, `set_workflow_definition` with the whole typed `input`. When amending an
-   existing definition, pass the unchanged `definitionStamp` returned by the read; a conflict means
-   another author landed first, so preserve the draft, read fresh, and reapply rather than overwriting.
-   Omit the stamp only for a workflow with no definition (pass `workflow`, `description`, `prefix` for
-   a new one — it registers the workflow itself, so a separate
-   `create_workflow` is only needed to reserve an empty workflow up front). The store validates the
-   revision as a whole and rejects an invalid one with a domain message — relay it verbatim and fix the
-   shape; it never half-writes. Write the **input contract** separately via `create_workflow` (a new
-   workflow) or `update_workflow` (an existing one) — setting it is saved in place and never forks a
-   revision. Never use `replace_workflow_definition` unless the customer explicitly chooses a
-   destructive last-write-wins replacement.
+5. **Write.** On approval, use the verb whose authority matches the job:
+   - For a new workflow, call `create_workflow` once with its name, whole typed `definition`, metadata,
+     input contract, and any `ensureDocuments`. The accepted call returns a usable workflow with a live
+     head and fresh definition stamp. A `WorkflowCreationConflict` means another workflow already claimed
+     the case-insensitive name or prefix; inspect `list_workflows` and choose another identity.
+   - For an amend, call `set_workflow_definition` with the whole typed `input` and the unchanged
+     `definitionStamp` returned by the read. A conflict means another author landed first, so preserve the
+     draft, read fresh, and reapply rather than overwriting. Change input-contract metadata separately
+     with `update_workflow`; that edit never forks a revision.
+   - Use `replace_workflow_definition` only when the customer explicitly chooses destructive
+     last-write-wins create-or-replace authority.
+
+   The store validates the whole request and rejects an invalid one without partial state. Relay its
+   domain message verbatim and fix the shape.
 6. **Confirm.** Report what landed, and — when an amend forked a pinned/frozen head — remind that existing
    items keep their pinned revision.
 
