@@ -2,7 +2,8 @@
   "mcpServers": {
     "workflows": {
       "command": "bun",
-      "args": ["run", "${CLAUDE_PLUGIN_ROOT}/mcp.js"]
+      "args": ["run", "${CLAUDE_PLUGIN_ROOT}/mcp.js"],
+      "alwaysLoad": true
     }
   }
 }

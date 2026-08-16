@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "workflows",
-      "version": "0.1.136",
+      "version": "0.1.137",
       "source": {
         "source": "local",
         "path": "./codex"

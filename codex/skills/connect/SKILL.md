@@ -3,6 +3,25 @@ name: connect
 description: Use when connecting a repository and machine to a Workflows board.
 ---
 
+## Required Workflows MCP capability
+
+Before starting **connect this machine and repository to Workflows**, confirm that the MCP server named `workflows` and its bootstrap tools are available. If the server is absent or failed to initialize, stop before loading another procedure or beginning the operation.
+
+Confirm that the bootstrap tools are available. Do not call a project tool as a readiness probe; this connection operation establishes the context those tools require.
+
+On any readiness stop, do not use the repository CLI, browser automation, raw HTTP or API calls, or another write path. Use a different interface only when the user explicitly requests that specific interface; that request grants no authority beyond existing product boundaries.
+
+Respond with these four lines and do not claim partial success:
+
+```text
+MCP: Workflows (`workflows`)
+Operation: connect this machine and repository to Workflows
+Outcome: not started
+Recovery: Restore or reinitialize the bundled `workflows` server, then start a fresh Codex session.
+```
+
+After readiness succeeds, follow the existing procedure. A later domain or tool error from a business tool is not a bootstrap failure; keep the procedure's existing error handling.
+
 Connect this repository and machine to a Workflows board.
 
 Use the connection values provided in the user's request.

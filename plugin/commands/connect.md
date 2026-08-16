@@ -3,6 +3,25 @@ description: Use when connecting a repository and machine to a Workflows board.
 argument-hint: <apiUrl> <projectId>   (or paste the link from the board's Setup page)
 ---
 
+## Required Workflows MCP capability
+
+Before starting **connect this machine and repository to Workflows**, confirm that the MCP server named `workflows` and its bootstrap tools are available. If the server is absent or failed to initialize, stop before loading another procedure or beginning the operation.
+
+Confirm that the bootstrap tools are available. Do not call a project tool as a readiness probe; this connection operation establishes the context those tools require.
+
+On any readiness stop, do not use the repository CLI, browser automation, raw HTTP or API calls, or another write path. Use a different interface only when the user explicitly requests that specific interface; that request grants no authority beyond existing product boundaries.
+
+Respond with these four lines and do not claim partial success:
+
+```text
+MCP: Workflows (`workflows`)
+Operation: connect this machine and repository to Workflows
+Outcome: not started
+Recovery: Restore the `workflows` server, use `/mcp` to retry it, and start a fresh Claude Code session only if the repaired tool catalog is not visible in this session.
+```
+
+After readiness succeeds, follow the existing procedure. A later domain or tool error from a business tool is not a bootstrap failure; keep the procedure's existing error handling.
+
 Connect this repository and machine to a Workflows board.
 
 Input the user provided: `$ARGUMENTS`
