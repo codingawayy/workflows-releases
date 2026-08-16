@@ -34,8 +34,14 @@ the reasoning has a home upstream, or route it to a workflow whose budget matche
 
 You are curating one shared tracker, not dropping items into a void. Before proposing:
 
-- Survey the items still **in flight** — not yet completed and not abandoned — and skim what they are
-  (`list_items`, then `get_item` on the related ones).
+- Call `list_items` with `scope: "all"` once. The compact survey is the complete retained history,
+  including active, completed, and abandoned items. Use its `id`, `title`, `status`, `terminal`, and
+  `parent_id` fields to identify plausible matches, then call `get_item` only for those candidates.
+- Treat anything other than the complete inline survey as a hard stop. If the client truncates it,
+  spills it to a file, returns a file reference, or otherwise withholds rows, tell the human that the
+  overlap check could not complete and do not propose or create items from the partial result.
+- Use the active candidates to decide dependencies; use the whole history to detect duplicates,
+  supersession, and earlier abandoned attempts.
 - Decide cross-relationships **in both directions**:
   - a new item that can't proceed until an in-flight one lands → the **new** item depends on the
     existing one;

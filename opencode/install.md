@@ -12,6 +12,7 @@ you a **board URL** (`apiUrl`), a **project id** (`projectId`), and a **scope** 
 - **Four native skill trees** — the interactive workflow intelligence plus every referenced document.
 - **MCP registration** — an `mcp.workflows` entry in an `opencode.json` config that launches the
   server.
+- **Output recommendation** — `tool_output.max_bytes: 80000` when the selected config has no value.
 - **Connection** — a per-machine board/auth-binding file and a per-repo project-id file.
 
 The harness that executes autonomous workflow leaves is selected separately from the OpenCode
@@ -132,7 +133,7 @@ done
 
 Do not copy only `SKILL.md`; the `reference/` documents are part of the skill package.
 
-### 4 · Register the MCP server
+### 4 · Register the MCP server and output recommendation
 
 Merge the `mcp.workflows` entry into the scope-appropriate `opencode.json`. Read the existing file
 first (if any) and merge — do not overwrite.
@@ -142,6 +143,9 @@ installing and write the resulting absolute `mcp.js` path into this machine-loca
 
 ```json
 {
+  "tool_output": {
+    "max_bytes": 80000
+  },
   "mcp": {
     "workflows": {
       "type": "local",
@@ -157,6 +161,9 @@ installing and write the resulting absolute `mcp.js` path into this machine-loca
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
+  "tool_output": {
+    "max_bytes": 80000
+  },
   "mcp": {
     "workflows": {
       "type": "local",
@@ -171,6 +178,14 @@ If the file already has a `"mcp"` key, add `"workflows"` inside it. If it alread
 `"mcp.workflows"` key, replace its value. Keep all other keys (`$schema`, `plugin`, `command`, etc.)
 intact. A repository `opencode.json` must never contain a home directory or another machine-specific
 path.
+
+Apply the output recommendation separately from the MCP merge, for both global and per-repo installs:
+
+- If `tool_output.max_bytes` is absent, set it to `80000`.
+- If it is already present, preserve the existing value.
+- If the existing value is below `80000`, tell the user that it may truncate the captured 360-item
+  survey. Raise it only after the user explicitly approves that change. Do not treat the pasted install
+  one-liner as approval to change an existing value.
 
 ### 5 · Connection — tell the user to run the scope-owned bundle
 

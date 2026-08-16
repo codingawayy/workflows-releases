@@ -53,8 +53,9 @@ you must know the workflow before you write the document.
    to conform → **redirect** to a better-fitting workflow → **ask** the human. When *nothing* fits,
    route to the closest workflow and **nudge** ("consider a workflow for X") — never auto-create one.
    Details in `reference/routing.md`.
-6. **Survey the rest of the tracker.** Before proposing, read the in-flight items: dependencies in both
-   directions, anything a new item supersedes or overlaps. Follow `reference/breakdown.md`.
+6. **Survey the rest of the tracker.** Before proposing, call `list_items` with `scope: "all"` so overlap
+   checks include terminal history, then inspect only plausible matches with `get_item`. Stop if the
+   client returns anything other than the complete inline survey. Follow `reference/breakdown.md`.
 7. **Propose, then gate.** Present the breakdown — a table (label · title · scope · **target workflow** ·
    depends-on), the dependency picture, the epic each cluster sits under — and **wait** for the gate.
 8. **Record on approval, in dependency order.** Create each item after its dependencies exist, with its

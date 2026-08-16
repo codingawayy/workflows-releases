@@ -10,5 +10,8 @@
       ],
       "enabled": true
     }
+  },
+  "tool_output": {
+    "max_bytes": 80000
   }
 }
