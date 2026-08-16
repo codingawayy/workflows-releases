@@ -6,12 +6,27 @@ Claude Code or OpenCode profile, for example, when that harness is installed on 
 
 | File | Native run-profile difference |
 | --- | --- |
-| [`claude-code.json`](./claude-code.json) | Claude Code `effortLevel` is `high` for implementation and `medium` otherwise. |
-| [`codex.json`](./codex.json) | Codex `model_reasoning_effort` is `high` for implementation and `medium` otherwise. |
-| [`opencode.json`](./opencode.json) | OpenCode gives the write-capable build agent 100 steps for implementation and 50 otherwise. |
+| [`claude-code.json`](./claude-code.json) | Claude Code `effortLevel` is `high` for implementation, `low` for launch repair, and `medium` otherwise. |
+| [`codex.json`](./codex.json) | Codex `model_reasoning_effort` is `high` for implementation, `low` for launch repair, and `medium` otherwise. |
+| [`opencode.json`](./opencode.json) | OpenCode gives the write-capable build agent 100 steps for implementation, 25 for launch repair, and 50 otherwise. |
 
-Each workflow step may name a semantic run profile. An omitted or `null` `runProfile` selects
-`default`, so that entry also governs routing when a step does not name another profile.
+## System selector roster
+
+Workflows requests only the following owner-facing system roster. Published names are durable ordinary
+`runProfiles` keys, not a closed namespace; workflow authors may use other semantic names for steps.
+
+| Selector | Execution moment |
+| --- | --- |
+| `default` | Chooses a transition, prepares work files, runs a workflow step whose `runProfile` is omitted or `null`, and supplies every other built-in invocation without a dedicated selector. It also substitutes for any requested key the repository profile does not declare. |
+| `launch-repair` | The runner-owned `launch-repair` preflight and repair worker. The worker resolves the current active profile again before invocation. |
+
+An undeclared requested key uses `default`; it is not a profile refusal. This substitution is distinct
+from the moments in the `default` row that request `default` directly. In particular, landing repair uses
+the landing-repair step's workflow-authored `runProfile`, or `default` when that authored value is omitted
+or `null`; there is no separate landing-repair system selector.
+
+The example-only `implementation`, `ui-validation`, and `workflow-documentation` names demonstrate that
+repository owners can continue to configure workflow-authored semantic names outside the system roster.
 
 To use one, create the repository directory and download the file matching the autonomous harness:
 

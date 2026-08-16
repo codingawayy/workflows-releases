@@ -11,6 +11,15 @@
         }
       }
     },
+    "launch-repair": {
+      "options": {
+        "agent": {
+          "build": {
+            "steps": 25
+          }
+        }
+      }
+    },
     "implementation": {
       "options": {
         "agent": {

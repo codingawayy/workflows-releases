@@ -7,6 +7,11 @@
         "effortLevel": "medium"
       }
     },
+    "launch-repair": {
+      "options": {
+        "effortLevel": "low"
+      }
+    },
     "implementation": {
       "options": {
         "effortLevel": "high"

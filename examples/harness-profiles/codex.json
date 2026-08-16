@@ -7,6 +7,11 @@
         "model_reasoning_effort": "medium"
       }
     },
+    "launch-repair": {
+      "options": {
+        "model_reasoning_effort": "low"
+      }
+    },
     "implementation": {
       "options": {
         "model_reasoning_effort": "high"
