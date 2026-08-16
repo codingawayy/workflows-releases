@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "workflows",
-      "version": "0.1.146",
+      "version": "0.1.147",
       "source": "./plugin"
     }
   ]
