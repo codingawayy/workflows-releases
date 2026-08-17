@@ -32,15 +32,30 @@ jobs:
         run: |
           set -euo pipefail
           git fetch --no-tags origin main
-          CURRENT=$(git rev-parse refs/remotes/origin/main)
-          if [ "$CURRENT" != "$GITHUB_SHA" ]; then
+          EVENT=$(git log -1 --format=%H "$GITHUB_SHA" -- docs-site)
+          CURRENT=$(git log -1 --format=%H refs/remotes/origin/main -- docs-site)
+          test -n "$EVENT"
+          test -n "$CURRENT"
+          if [ "$CURRENT" != "$EVENT" ]; then
             echo "superseded=true" >> "$GITHUB_OUTPUT"
-            echo "Target commit $GITHUB_SHA was superseded by $CURRENT before upload."
+            echo "Docs publication $EVENT was superseded by $CURRENT before upload."
             exit 0
           fi
-          SOURCE_SHA=$(git show -s --format=%B "$GITHUB_SHA" | sed -n 's/^Workflows-Source-Commit: \([0-9a-f]\{40\}\)$/\1/p')
+          MESSAGE=$(git show -s --format=%B "$EVENT")
+          SOURCE_REPOSITORY_COUNT=$(printf '%s\n' "$MESSAGE" | sed -n '/^Workflows-Source-Repository: /p' | wc -l)
+          SOURCE_SHA_COUNT=$(printf '%s\n' "$MESSAGE" | sed -n '/^Workflows-Source-Commit: /p' | wc -l)
+          SITE_SHA_COUNT=$(printf '%s\n' "$MESSAGE" | sed -n '/^Workflows-Site-SHA256: /p' | wc -l)
+          test "$SOURCE_REPOSITORY_COUNT" -eq 1
+          test "$SOURCE_SHA_COUNT" -eq 1
+          test "$SITE_SHA_COUNT" -eq 1
+          SOURCE_REPOSITORY=$(printf '%s\n' "$MESSAGE" | sed -n 's/^Workflows-Source-Repository: \([A-Za-z0-9_.-]\+\/[A-Za-z0-9_.-]\+\)$/\1/p')
+          SOURCE_SHA=$(printf '%s\n' "$MESSAGE" | sed -n 's/^Workflows-Source-Commit: \([0-9a-f]\{40\}\)$/\1/p')
+          SITE_SHA=$(printf '%s\n' "$MESSAGE" | sed -n 's/^Workflows-Site-SHA256: \([0-9a-f]\{64\}\)$/\1/p')
+          test -n "$SOURCE_REPOSITORY"
           test -n "$SOURCE_SHA"
+          test -n "$SITE_SHA"
           echo "superseded=false" >> "$GITHUB_OUTPUT"
+          echo "publication=$EVENT" >> "$GITHUB_OUTPUT"
           echo "source-sha=$SOURCE_SHA" >> "$GITHUB_OUTPUT"
 
       - name: Upload the current docs-site tree
@@ -61,10 +76,10 @@ jobs:
         run: |
           set -euo pipefail
           git fetch --no-tags origin main
-          CURRENT=$(git rev-parse refs/remotes/origin/main)
-          if [ "$CURRENT" != "$GITHUB_SHA" ]; then
+          CURRENT=$(git log -1 --format=%H refs/remotes/origin/main -- docs-site)
+          if [ "$CURRENT" != "${{ steps.current.outputs.publication }}" ]; then
             echo "superseded=true" >> "$GITHUB_OUTPUT"
-            echo "Target commit $GITHUB_SHA deployed, then was superseded by $CURRENT. Its result is not current."
+            echo "Docs publication ${{ steps.current.outputs.publication }} deployed, then was superseded by $CURRENT. Its result is not current."
           else
             echo "superseded=false" >> "$GITHUB_OUTPUT"
           fi
