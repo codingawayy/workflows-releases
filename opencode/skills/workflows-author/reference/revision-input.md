@@ -64,7 +64,6 @@ order the derivation wouldn't produce on its own (e.g. a status reachable only t
   "statusIn": "proposed",          // the status it leaves FROM; omit ONLY on the single entry transition
   "statusOut": "analyzed",         // the status it lands ON
   "label": "Drop",                 // optional button text for the move; blank = derived (see below)
-  "needsBuildEnv": true,           // its steps run the repo's code, so its checkout gets a dependency install and the repo's setup; default false (source only)
   "description": "what this edge is for — short prose",
   "auto": true,                    // engine auto-advances through it when an item rests at statusIn
   "routerCondition": "...",        // prose the router reads to pick this edge among a status's exits

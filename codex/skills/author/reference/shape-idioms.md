@@ -31,13 +31,13 @@ add-item (interactive, → proposed)
   ──auto──▶ analyze-item (leaf, proposed → analyzed)        its step edits the analysis document
             finalize-design (interactive, analyzed → designed)   ← the human gate (go/no-go/drop/send-back)
   ──auto──▶ plan-implementation (leaf, designed → planned)  its step edits the plan document
-  ──auto──▶ implement (needsBuildEnv, planned → implemented) its step edits the summary document
+  ──auto──▶ implement (leaf, planned → implemented)         its step edits the summary document
 ```
 
 - Each autonomous stage is `auto` so the pipeline flows; the one interactive stage is where a human
   steers. The human reads the `analysis` and decides — they never watch the agent work.
-- The implement stage is `needsBuildEnv: true` because its steps run the repository's code — every
-  transition gets its own checkout, and this one's is given a dependency install and the repo's `setup`.
+- Every transition gets its own checkout, prepared the same way by the repository's declared `setup` —
+  a transition declares nothing about that, including the one whose steps run the repository's code.
 - Add rework as an ordinary edge back (`analyzed → proposed`, `removes: ["analysis"]`) and drop edges
   off each pre-terminal status.
 - Use for any "an idea becomes a shipped change through reviewed stages" process.
