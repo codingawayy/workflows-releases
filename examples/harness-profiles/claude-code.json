@@ -12,6 +12,11 @@
         "effortLevel": "low"
       }
     },
+    "landing-repair": {
+      "options": {
+        "effortLevel": "high"
+      }
+    },
     "implementation": {
       "options": {
         "effortLevel": "high"

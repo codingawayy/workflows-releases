@@ -20,6 +20,15 @@
         }
       }
     },
+    "landing-repair": {
+      "options": {
+        "agent": {
+          "build": {
+            "steps": 100
+          }
+        }
+      }
+    },
     "implementation": {
       "options": {
         "agent": {

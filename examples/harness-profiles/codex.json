@@ -12,6 +12,11 @@
         "model_reasoning_effort": "low"
       }
     },
+    "landing-repair": {
+      "options": {
+        "model_reasoning_effort": "high"
+      }
+    },
     "implementation": {
       "options": {
         "model_reasoning_effort": "high"

@@ -68,7 +68,6 @@ order the derivation wouldn't produce on its own (e.g. a status reachable only t
   "auto": true,                    // engine auto-advances through it when an item rests at statusIn
   "routerCondition": "...",        // prose the router reads to pick this edge among a status's exits
   "removes": ["analysis"],         // opt-in: documents this edge deletes when taken (never a movement condition)
-  "landingRepairStep": "repair-landing-drift", // optional leaf key run once after a failed landing verify
   "steps": [ /* ordered steps, for an autonomous transition */ ]
 }
 ```
@@ -87,9 +86,6 @@ Key rules the store enforces (it rejects a violation with a clear message):
 - **`removes` names declared artifacts to delete when the edge is taken** — an opt-in effect, never a
   condition of movement (there is no "backward edge" concept). An edge with none leaves its documents in
   place until a re-run overwrites them; the only guards are that each name is declared and none repeats.
-- **`landingRepairStep` names one leaf in this transition's `steps`.** The engine keeps that leaf off the
-  forward sequence, runs it at most once after landing verification fails, then attempts the landing once
-  more. Omit it when the transition has no authored landing repair.
 - **`label` sets the move button's text** — the word a human reads to steer (a close action's "Drop" /
   "Abandon" / "Won't fix", a re-open, a "Continue"). Leave it blank and the read-model derives one (a
   humanized transition name, "Re-open {Status}" from the edge's target status, or the generic "Drop"). Keep it a **plain action verb**:
@@ -141,7 +137,7 @@ sharing this syntax cannot collide:
 | `{{path.run.output}}` | this step's own output file — one per member in a fanout |
 | `{{path.run.scratch}}` | this step's scratch directory, for whatever it merely uses; dropped once the step completes |
 | `{{path.run.questions}}` | the item's Q&A thread — read-only; a step adds to it by returning `needs-clarification` |
-| `{{path.run.verifyFailure}}` | what the failed verify check said, for a landing repair step |
+| `{{path.run.verifyFailure}}` | what the failed verify check said; reserved for engine-owned landing repair |
 | `{{path.run.itemDir}}` | the item's work dir. Prefer never to use it: everything a step legitimately reads or writes has its own derived reference above, and a path built by hand is one the engine does not know about |
 | `{{value.item.id}}` | the id of the item this step run is about (`B247`) — say this when a prompt needs to name the item, rather than handing it a directory |
 | `{{value.member:<field>}}` | a fanout member's field — the one reference nothing declares |
