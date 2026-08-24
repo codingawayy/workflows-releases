@@ -1,5 +1,5 @@
 ---
-description: Use when inspecting a project's human-intervention queue, reviewing selected waiting items, or guiding the user through one intervention at a time.
+description: Use when inspecting a project's human-intervention queue, reviewing selected waiting items, guiding the user through one intervention at a time, or interviewing the user through the decisions of many waiting items in one batch review.
 ---
 
 ## Required Workflows MCP capability

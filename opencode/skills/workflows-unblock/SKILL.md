@@ -1,6 +1,6 @@
 ---
 name: workflows-unblock
-description: Use when inspecting a project's human-intervention queue, reviewing selected waiting items, or guiding the user through one intervention at a time.
+description: Use when inspecting a project's human-intervention queue, reviewing selected waiting items, guiding the user through one intervention at a time, or interviewing the user through the decisions of many waiting items in one batch review.
 ---
 
 ## Required Workflows MCP capability
@@ -27,7 +27,8 @@ After readiness succeeds, follow the existing procedure. A later domain or tool 
 Inspect the configured project's intervention snapshot, then help the user take one explicit, fenced action at
 a time. Invoke this procedure as `/workflows-unblock` with optional item identifiers. The server supplies every current
 cause, constraint, action, and explanation; do not invent a primary cause, reorder causes, or hide an
-unfamiliar cause.
+unfamiliar cause. When the user asks to review many waiting items together, use **batch review mode**
+(section 7): it interviews first, collects every decision, and writes only at the end.
 
 ## 1. Choose the item without writing
 
@@ -43,6 +44,10 @@ remembering that choice in this conversation.
 - Without identifiers, use **guided mode**. Take the first current entry, name the item and every reason it is
   waiting, and introduce no other item until this one is resolved or explicitly deferred in the conversation.
   If the list is empty, report that no project item currently needs human intervention and stop.
+- When the user asks to review several waiting items as one interview — a themed sweep such as every item
+  waiting at one status or under one parent, or multiple identifiers with a request to decide them together —
+  use **batch review mode** (section 7). Several identifiers to process independently, in order, stay in
+  selected-item mode.
 
 ## 2. Load one waiting item
 
@@ -138,3 +143,66 @@ seven headings even when empty:
   process them in selected-item mode.
 - **Still waiting** — every identifier remaining in the final snapshot and its current authorized next step,
   or a plain statement that none is available.
+
+## 7. Batch review mode
+
+One read-only interview across many waiting items, then one approved apply pass. The fences are the same as
+in the one-item loop; only the conversation shape changes. Nothing is written before the apply phase.
+
+### Survey
+
+Call `list_interventions` once and keep only the items in the user's requested scope. Group the scoped items
+by parent item first, then by status and cause.
+
+### Investigate before asking
+
+Build a brief for every scoped item from `get_item`, the artifacts it names, and its dialogue. Keep each
+item's reading isolated so one item's documents cannot color another item's brief; run the readings in
+parallel when the harness offers isolated helpers, otherwise one item at a time. Each brief states the
+problem, the proposed design, every open decision with its recommendation and stakes, what is already
+settled, and any relation to another scoped item.
+
+Facts are yours to find, never the user's. Verify freshness before interviewing: confirm the code and items
+each analysis names still exist, and check whether work that landed after the analysis touched the same
+area. An item whose analysis facts have moved gets a handling question — re-analyze, proceed with a recorded
+caveat, or drop — instead of its design questions.
+
+### Interview in rounds
+
+Open with one big-picture table: the groups, their items, and their open-decision counts. Then work the
+decisions as a tree in rounds. The frontier is every question whose prerequisites are settled; a question
+that depends on another question still open waits for a later round. Ask cross-item questions first —
+sequencing, ownership, shared code — because their answers reshape the rest. Then take one themed group per
+round, so each round stays small.
+
+Number questions consecutively across the whole session and format each as:
+
+```
+❓ **Q<n>** - **<title>**: <the question, with its concrete options>
+
+➡️ <recommended answer, with the one-line reason>
+```
+
+Use plain wording with a concrete referent, and explain workflow and server terms from their own
+descriptions. If investigation exposed a question the item's documents never asked, ask it rather than
+silently assume. Record every answer; write nothing yet.
+
+### One apply plan, one approval
+
+When the frontier is empty, present the complete apply plan: per item, the exact action as section 4 maps
+it, the collected decisions it records, the rationale, and its effects. Order the plan deliberately: advance
+items before adding dependency edges between them, because an unmet edge blocks advancement; and when an
+item's own gate cannot pass yet, plan to park its collected decisions as one dialogue note instead of losing
+them. Ask for one explicit yes to the whole plan; an invocation or earlier general instruction is not
+approval.
+
+### Apply with the existing fences
+
+Execute the plan item by item under the rules of sections 3–5, with one change: the approved plan replaces
+the per-action approval prompt. Immediately before each item's write, refresh that item exactly as section 3
+directs; if any fence fact moved — the action, its effects or blockers, the move set, an active stop or
+pass, the claim, or an artifact stamp — report the precise stale fact and skip the item. Never silently
+adapt, reorder remedies, or substitute an action. When a transition's own steps ask for the human's
+decisions, supply the collected answers; do not re-interview the user.
+
+Close with the section 6 ledger; a skipped item reports under **Changed** with its stale fact.
