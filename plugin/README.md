@@ -18,6 +18,9 @@ Each command runs its underlying skill; the skills also auto-invoke when the age
 
 ## Install
 
+The complete guide is
+<https://workflows-docs.web.app/get-started/install-the-agent#win11-pwsh-claude-code>.
+
 ```
 /plugin marketplace add codingawayy/workflows-releases
 /plugin install workflows
@@ -30,16 +33,7 @@ bun run plugin:build          # assembles build/plugin/ (skills + bundled MCP se
 claude --plugin-dir build/plugin
 ```
 
-**Prerequisite:** [Bun](https://bun.sh) on your PATH — the MCP server runs under Bun. If Bun isn't on your
-PATH, the `workflows` server shows as failed under `/mcp` with a generic spawn error; install Bun from
-[bun.sh](https://bun.sh), reopen your shell, and reload Claude Code.
-
-## Configure the autonomous harness
-
-The harness that executes autonomous workflow leaves is selected separately from the Claude Code
-plugin used to steer Workflows. Use the canonical
-[repository harness-profile examples](https://github.com/codingawayy/workflows-releases/tree/main/examples/harness-profiles)
-to copy a Claude Code, Codex, or OpenCode profile into `.workflows/harness-profiles/`.
+**Prerequisite:** [Bun](https://bun.sh) on your PATH — the MCP server runs under Bun.
 
 ## Connect
 
@@ -50,12 +44,14 @@ project. Run this once **in your project repo**:
 /workflows:connect <apiUrl> <projectId>
 ```
 
-Your board's **Setup** page (`/setup`) hands you the `apiUrl` and `projectId` — pick your project there
-and it gives you a complete secretless `workflows://connect?apiUrl=…&projectId=…` link. **Copy that
-link (don't click it)** and pass it to `/workflows:connect`. `/connect` writes the per-machine
-connection (`apiUrl` and the board-discovered public `workosClientId`) to
-`~/.workflows/client.json`, asks you to approve a one-time personal sign-in code, and writes the
-per-repo `projectId` to this repo's `.workflows/config.json`.
+Your board's **Connect agent** page gives you the complete secretless
+`workflows://connect?apiUrl=…&projectId=…` link. **Copy that link (don't click it)** and pass it to
+`/workflows:connect`. What connecting writes, how to prove it worked, and what to do when it did not
+are at
+<https://workflows-docs.web.app/get-started/connect-your-repository#prove-the-connection>.
 
-(If you also run `app.tray` for auto-run, its connect flow discovers and writes the same
-per-machine WorkOS binding — you only connect the machine once, but each repo needs its `projectId`.)
+## Auto-run
+
+To let an agent pick up and run items unattended, follow
+<https://workflows-docs.web.app/get-started/connect-your-repository#set-up-auto-run>. The agent that
+runs unattended is selected separately from the plugin you use to steer Workflows.
