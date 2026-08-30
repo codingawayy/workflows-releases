@@ -192,7 +192,8 @@ silently assume. Record every answer; write nothing yet.
 
 When the frontier is empty, present the complete apply plan: per item, the exact action as section 4 maps
 it, the collected decisions it records, the rationale, and its effects. Order the plan deliberately: advance
-items before adding dependency edges between them, because an unmet edge blocks advancement; and when an
+items before adding dependency OR parent edges between them, because either one blocks advancement —
+filing an item under another holds that other item until it closes; and when an
 item's own gate cannot pass yet, plan to park its collected decisions as one dialogue note instead of losing
 them. Ask for one explicit yes to the whole plan; an invocation or earlier general instruction is not
 approval.

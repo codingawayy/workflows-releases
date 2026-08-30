@@ -112,7 +112,7 @@ Halt the loop — do not keep calling `next_step` — on any of these. Report wh
 | State          | Meaning                                                                          |
 | -------------- | -------------------------------------------------------------------------------- |
 | `noop`         | No autonomous transition consumes the item's status — nothing to drive.               |
-| `blocked`      | Unmet dependencies (listed in `unmet`) — those items must finish first.          |
+| `blocked`      | Unmet prerequisites (listed in `unmet`) — a dependency, or an open item under this one at any depth. They must finish first. |
 | `busy`         | Another run (likely the auto-run engine) holds the run claim — wait or stop it.  |
 | `unsupported`  | This step kind isn't drivable in-session — run the transition headless instead (the item's move on the board, or auto-run). |
 | `error`        | A precondition failed (e.g. unsupported definition format) — report the message. |
@@ -121,5 +121,5 @@ Halt the loop — do not keep calling `next_step` — on any of these. Report wh
 ## 5. Report
 
 When the loop stops, tell the user plainly: the item's final status, the transitions you advanced it through
-this run, and the stop reason with the one concrete next action it implies (answer questions, resolve a
-dependency, collaborate with the user on a step that needs them, etc.).
+this run, and the stop reason with the one concrete next action it implies (answer questions, finish a
+dependency or the open work under the item, collaborate with the user on a step that needs them, etc.).

@@ -62,8 +62,10 @@ You are curating one shared tracker, not dropping items into a void. Before prop
 
 An **epic** is an item that *contains* a cluster of items serving one shared goal — the home for that
 goal's shared context (its brief/scope). File items under it via the **parent** relation (`parentId` on
-`create_item`, or `set_parent` afterward) — distinct from a dependency: a parent *groups*, a dependency
-*gates*.
+`create_item`, or `set_parent` afterward). A parent *groups* and a dependency says what must finish
+first, but both **gate**: an item does not advance while anything under it is open, at any depth. So
+filing an item under an epic holds that epic until the item closes, which is what makes the epic run
+its members before itself.
 
 - All the new items serve one goal → set the **same parent** on all of them. Reuse an existing epic if
   one already names the goal; otherwise propose creating one and writing its brief. An epic runs the
