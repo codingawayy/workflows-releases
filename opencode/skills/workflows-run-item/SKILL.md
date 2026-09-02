@@ -36,16 +36,16 @@ Use the item id the user gave (e.g. `/workflows-run-item B26.070` → `B26.070`)
 — don't guess. Everything below uses that id as `item`.
 
 A second argument is an optional **target transition** to drive (e.g. `/workflows-run-item B26.070 finalize-design`
-→ `item = B26.070`, `transition = finalize-design`). This is how the board's deep link hands off a
-specific stepped move at a forked status — the human clicked *that* move, so:
+→ `item = B26.070`, `transition = finalize-design`). It names one specific stepped move at a status that
+forks, and it comes from the person — the board offers no way to start a move, so nothing hands this off:
 
 - Pass `transition` to **only the first** `next_step` call (see below); never re-pass it after a
   transition completes (`done`) — the item has advanced, and the next move is routed by status.
 - A named-transition invocation is **attended by construction** — the human asked for this exact move.
   So when an **interactive** `run-step` comes back, collaborate (do **not** apply the "if unattended,
-  stop" rule from §2 — the click is the human's presence).
-- If `next_step` refuses the named move as no longer available (a stale link — the item already moved),
-  retry **without** the transition argument to drive the item's current move, then continue normally.
+  stop" rule from §2 — the request is the human's presence).
+- If `next_step` refuses the named move as no longer available (the item already moved), retry
+  **without** the transition argument to drive the item's current move, then continue normally.
 
 ## 2. Run the loop
 
@@ -114,7 +114,7 @@ Halt the loop — do not keep calling `next_step` — on any of these. Report wh
 | `noop`         | No autonomous transition consumes the item's status — nothing to drive.               |
 | `blocked`      | Unmet prerequisites (listed in `unmet`) — a dependency, or an open item under this one at any depth. They must finish first. |
 | `busy`         | Another run (likely the auto-run engine) holds the run claim — wait or stop it.  |
-| `unsupported`  | This step kind isn't drivable in-session — run the transition headless instead (the item's move on the board, or auto-run). |
+| `unsupported`  | This step kind isn't drivable in-session — run the transition headless instead (let auto-run pick the item up, or start a headless run). |
 | `error`        | A precondition failed (e.g. unsupported definition format) — report the message. |
 | `paused` / `gate-exhausted` / `claim-lost` | Pause/cap/handover from a submit (§3).                          |
 
