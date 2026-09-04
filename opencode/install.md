@@ -7,9 +7,9 @@ you a **board URL** (`apiUrl`), a **project id** (`projectId`), and a **scope** 
 ## What you're installing
 
 - **`mcp.js`** — the `workflows` MCP server (the spine tools: read/write items, drive transitions).
-- **Five command files** — `/workflows-add-item`, `/workflows-author`, `/workflows-run-item`,
-  `/workflows-discuss`, `/workflows-unblock` (thin user-facing entry points).
-- **Five native skill trees** — the interactive workflow intelligence plus every referenced document.
+- **Six command files** — `/workflows-add-item`, `/workflows-author`, `/workflows-build-skills`,
+  `/workflows-run-item`, `/workflows-discuss`, `/workflows-unblock` (thin user-facing entry points).
+- **Six native skill trees** — the interactive workflow intelligence plus every referenced document.
 - **MCP registration** — an `mcp.workflows` entry in an `opencode.json` config that launches the
   server.
 - **Output recommendation** — `tool_output.max_bytes: 80000` when the selected config has no value.
@@ -63,10 +63,11 @@ curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main
 
 ### 2 · Download the command files
 
-Download the five command files to the scope-appropriate commands directory. The files are:
+Download the six command files to the scope-appropriate commands directory. The files are:
 
 - `workflows-add-item.md` — `https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/commands/workflows-add-item.md`
 - `workflows-author.md` — `https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/commands/workflows-author.md`
+- `workflows-build-skills.md` — `https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/commands/workflows-build-skills.md`
 - `workflows-run-item.md` — `https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/commands/workflows-run-item.md`
 - `workflows-discuss.md` — `https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/commands/workflows-discuss.md`
 - `workflows-unblock.md` — `https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/commands/workflows-unblock.md`
@@ -75,7 +76,7 @@ Download the five command files to the scope-appropriate commands directory. The
 
 ```sh
 mkdir -p ~/.config/opencode/commands
-for verb in add-item author run-item discuss unblock; do
+for verb in add-item author build-skills run-item discuss unblock; do
   curl -fsSL "https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/commands/workflows-${verb}.md" \
     -o "$HOME/.config/opencode/commands/workflows-${verb}.md"
 done
@@ -85,7 +86,7 @@ done
 
 ```sh
 mkdir -p .opencode/commands
-for verb in add-item author run-item discuss unblock; do
+for verb in add-item author build-skills run-item discuss unblock; do
   curl -fsSL "https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/commands/workflows-${verb}.md" \
     -o ".opencode/commands/workflows-${verb}.md"
 done
@@ -108,6 +109,8 @@ workflows-author/SKILL.md
 workflows-author/reference/best-practices.md
 workflows-author/reference/revision-input.md
 workflows-author/reference/shape-idioms.md
+workflows-build-skills/SKILL.md
+workflows-build-skills/reference/operation-contract.md
 workflows-run-item/SKILL.md
 workflows-discuss/SKILL.md
 workflows-unblock/SKILL.md
@@ -125,6 +128,8 @@ for rel in \
   workflows-author/reference/best-practices.md \
   workflows-author/reference/revision-input.md \
   workflows-author/reference/shape-idioms.md \
+  workflows-build-skills/SKILL.md \
+  workflows-build-skills/reference/operation-contract.md \
   workflows-run-item/SKILL.md \
   workflows-discuss/SKILL.md \
   workflows-unblock/SKILL.md
