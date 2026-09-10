@@ -32,7 +32,7 @@ queue without learning MCP tool names.
 
 This operation changes repository files only. While surveying or generating operations, never call
 `next_step`, `submit_step`, `take_move`, `set_status`, `write_artifact`, `append_question`,
-`unblock_item`, `retry_routing`, or any other tool that changes an item, claim, dialogue, document, or
+`recover_item`, `retry_routing`, or any other tool that changes an item, claim, dialogue, document, or
 workflow definition.
 
 Before inspecting or drafting files, read [reference/operation-contract.md](reference/operation-contract.md).

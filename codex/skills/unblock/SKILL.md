@@ -71,12 +71,12 @@ Immediately before asking for final approval, refresh this item:
 
 1. Call `list_interventions` and extract only this identifier's current entry. Do not introduce other entries.
 2. Call `get_item` to refresh its status, claim fields, artifact names, and current `moves`.
-3. For `unblock-stop`, call `get_item_supervision` and use only the current open episode's
-   `unblock.allowVersion`. If `unblock.pass` is present, require the user to choose exactly `keep` or
-   `start-over` and explain that choice; omit `passChoice` only when no pass is open. Separately offer the
-   optional launch-repair prompt: blank means ordinary scheduling, while non-blank text is stored verbatim
-   and authorizes exactly one repair attempt before one workflow launch. It does not choose a machine or
-   alter Keep versus Start over.
+3. For `recover-item`, call `get_item_supervision` and retain the complete `recovery.snapshot` unchanged.
+   Offer only the returned `recovery.actions`: `continue` when no pass is open, or the lawful `keep` and
+   `start-over` choices for the inspected pass. Explain that Keep preserves completed work while Start
+   over discards the pass. The optional reason is human audit, not an agent instruction. Separately offer
+   repair: a non-blank `repair.instruction` authorizes exactly one launch-repair attempt before ordinary
+   scheduling. Omit repair when none is approved; it neither chooses a machine nor changes the pass choice.
 4. For `amend-routing-input`, call `read_artifact` again for the selected artifact and use that returned
    `stamp`, current content, the full proposed replacement content, and one non-blank reason.
 
@@ -93,10 +93,12 @@ approval.
 Map only these known action kinds. The operation that owns the change also owns its audit; never add a second
 `append_question`, raw `set_status`, or other duplicate write.
 
-- `unblock-stop` — call `unblock_item` once with the refreshed `allowVersion`, rationale, the approved
-  `repairPrompt` only when non-blank, and a pass choice only when the refreshed `unblock.pass` is present.
-  This is the only stop action. It neither launches a run nor changes status or published artifacts;
-  it may also clear the matching routing decline named in `effects`.
+- `recover-item` — call `recover_item` once with the refreshed `recovery.snapshot` as `snapshot`, the
+  approved value from `recovery.actions` as `action`, and any approved `reason` and `repair.instruction`.
+  This atomically resolves the inspected stop, applies the pass choice, releases the exact expired hold
+  when present, and wakes ordinary scheduling. An active holder or changed snapshot writes nothing.
+  It neither launches a run nor changes status or published artifacts; it may also clear the matching
+  routing decline named in `effects`.
 - `retry-routing` — call `retry_routing` once with the descriptor's exact `expectedRoutingVersion` and the
   approved non-blank rationale. It changes no routing input and launches no run.
 - `amend-routing-input` — call `write_artifact` once with the selected artifact, full approved content,
@@ -117,7 +119,7 @@ tool mapping. A non-empty `blockedBy` list likewise authorizes no write.
 ## 5. Handle a fence refusal
 
 A typed refusal, artifact conflict, changed status or move set, changed active-stop confirmation or
-`unblock.pass`, changed claim,
+`recovery.snapshot`, changed claim,
 or changed routing version means the approved action did not land. Report the precise stale fact. Refresh the
 intervention entry and only this item's affected context: `get_item`, plus `get_item_supervision` for a stop or
 `read_artifact` for an edit. Do not auto-retry, auto-merge, switch routing remedies, or silently choose a new
