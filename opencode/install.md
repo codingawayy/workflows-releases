@@ -7,6 +7,7 @@ you a **board URL** (`apiUrl`), a **project id** (`projectId`), and a **scope** 
 ## What you're installing
 
 - **`mcp.js`** — the `workflows` MCP server (the spine tools: read/write items, drive transitions).
+- **`workflows-owned-process.exe`** — the Windows local resource helper, installed beside `mcp.js`.
 - **Six command files** — `/workflows-add-item`, `/workflows-author`, `/workflows-build-skills`,
   `/workflows-run-item`, `/workflows-discuss`, `/workflows-unblock` (thin user-facing entry points).
 - **Six native skill trees** — the interactive workflow intelligence plus every referenced document.
@@ -28,6 +29,7 @@ The user's one-liner named a scope: **global** or **per-repo**.
 | File              | Global scope                                | Per-repo scope                       |
 | ----------------- | ------------------------------------------- | ------------------------------------ |
 | `mcp.js`          | `~/.config/opencode/workflows/mcp.js`       | `.opencode/workflows/mcp.js`         |
+| `workflows-owned-process.exe` | `~/.config/opencode/workflows/workflows-owned-process.exe` | `.opencode/workflows/workflows-owned-process.exe` |
 | Command files     | `~/.config/opencode/commands/`              | `.opencode/commands/`                |
 | Skill trees       | `~/.config/opencode/skills/`                | `.opencode/skills/`                  |
 | `opencode.json`   | `~/.config/opencode/opencode.json`          | `opencode.json` (repo root)          |
@@ -39,7 +41,7 @@ OpenCode scope. Only connection state belongs under `~/.workflows`; `config.json
 
 ## Steps
 
-### 1 · Download `mcp.js`
+### 1 · Download the server and its resource helper
 
 Download the bundled OpenCode MCP server from:
 
@@ -51,6 +53,8 @@ Download the bundled OpenCode MCP server from:
 mkdir -p ~/.config/opencode/workflows
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/mcp.js \
   -o ~/.config/opencode/workflows/mcp.js
+curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/workflows-owned-process.exe \
+  -o ~/.config/opencode/workflows/workflows-owned-process.exe
 ```
 
 **Per-repo** (run from the repo root):
@@ -59,6 +63,8 @@ curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main
 mkdir -p .opencode/workflows
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/mcp.js \
   -o .opencode/workflows/mcp.js
+curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/workflows-owned-process.exe \
+  -o .opencode/workflows/workflows-owned-process.exe
 ```
 
 ### 2 · Download the command files

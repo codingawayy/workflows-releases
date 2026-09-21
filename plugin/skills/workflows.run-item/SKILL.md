@@ -36,6 +36,13 @@ to do next; this skill is the wrapper so the user need not know the tool names. 
 Use the item id the user gave (e.g. `/workflows:run-item B26.070` → `B26.070`). If none was given, ask which item
 — don't guess. Everything below uses that id as `item`.
 
+Read `get_item` before entering the loop. When the request is to resume an attended operation, inspect
+the item's current moves and their instructions first. Follow any workflow-document pointer with
+`read_workflow_document`; complete that operation's receiving records and relationships before its
+acknowledgment move. Use `take_move` for a manual move the requested operation calls for. Dependencies
+gate autonomous work, so they can already exist while this attended operation still needs completion.
+Do not enter the automatic loop and mistake its `blocked` result for completion of that operation.
+
 A second argument is an optional **target transition** to drive (e.g. `/workflows:run-item B26.070 finalize-design`
 → `item = B26.070`, `transition = finalize-design`). It names one specific stepped move at a status that
 forks, and it comes from the person — the board offers no way to start a move, so nothing hands this off:
