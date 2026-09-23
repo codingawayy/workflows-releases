@@ -1,6 +1,6 @@
 {
   "name": "workflows",
-  "version": "0.1.219",
+  "version": "0.1.220",
   "description": "Record, route, author, discuss, unblock, drive, and build project operations from Codex.",
   "author": {
     "name": "Workflows"
