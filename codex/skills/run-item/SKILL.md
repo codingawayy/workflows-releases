@@ -118,7 +118,7 @@ Halt the loop — do not keep calling `next_step` — on any of these. Report wh
 
 | State          | Meaning                                                                          |
 | -------------- | -------------------------------------------------------------------------------- |
-| `noop`         | No autonomous transition consumes the item's status — nothing to drive.               |
+| `noop`         | Nothing to drive from the item's status: none leaves it, it forks with no automatic exit, or its only move is a person's step-less manual choice. Report the message; take that move with `take_move` only when the user chooses it. |
 | `blocked`      | Unmet prerequisites (listed in `unmet`) — a dependency, or an open item under this one at any depth. They must finish first. |
 | `busy`         | Another run (likely the auto-run engine) holds the run claim — wait or stop it.  |
 | `unsupported`  | This step kind isn't drivable in-session — run the transition headless instead (let auto-run pick the item up, or start a headless run). |

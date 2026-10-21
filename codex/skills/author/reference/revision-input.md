@@ -83,6 +83,10 @@ Key rules the store enforces (it rejects a violation with a clear message):
   containing an `interactive` step is human-LED regardless (a human runs it) and must not be `auto`.
 - **At most one `auto` exit per status.** A status may fork into several exits, but only one may be the
   automatic one. Multiple non-auto exits are `routerCondition`-routed (the router picks) or human-started.
+- **No loop of step-less `auto` exits.** An `auto` transition with no steps is taken as soon as an item
+  reaches its status, so a chain of them that returns to a status it passed (a self-loop included) would
+  move an item forever. The store refuses it and names the statuses in order. Break the loop by making
+  one edge human-started, removing its `auto` and routing it with a `routerCondition`, or giving it steps.
 - **`removes` names declared artifacts to delete when the edge is taken** — an opt-in effect, never a
   condition of movement (there is no "backward edge" concept). An edge with none leaves its documents in
   place until a re-run overwrites them; the only guards are that each name is declared and none repeats.
