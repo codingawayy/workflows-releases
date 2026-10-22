@@ -7,6 +7,7 @@ you a **board URL** (`apiUrl`), a **project id** (`projectId`), and a **scope** 
 ## What you're installing
 
 - **`mcp.js`** — the `workflows` MCP server (the spine tools: read/write items, drive transitions).
+- **`repository-operation-worker.js`** — the checkout preparation and publication worker, installed beside `mcp.js`.
 - **`workflows-owned-process.exe`** — the Windows local resource helper, installed beside `mcp.js`.
 - **Six command files** — `/workflows-add-item`, `/workflows-author`, `/workflows-build-skills`,
   `/workflows-run-item`, `/workflows-discuss`, `/workflows-unblock` (thin user-facing entry points).
@@ -29,6 +30,7 @@ The user's one-liner named a scope: **global** or **per-repo**.
 | File              | Global scope                                | Per-repo scope                       |
 | ----------------- | ------------------------------------------- | ------------------------------------ |
 | `mcp.js`          | `~/.config/opencode/workflows/mcp.js`       | `.opencode/workflows/mcp.js`         |
+| `repository-operation-worker.js` | `~/.config/opencode/workflows/repository-operation-worker.js` | `.opencode/workflows/repository-operation-worker.js` |
 | `workflows-owned-process.exe` | `~/.config/opencode/workflows/workflows-owned-process.exe` | `.opencode/workflows/workflows-owned-process.exe` |
 | Command files     | `~/.config/opencode/commands/`              | `.opencode/commands/`                |
 | Skill trees       | `~/.config/opencode/skills/`                | `.opencode/skills/`                  |
@@ -36,12 +38,12 @@ The user's one-liner named a scope: **global** or **per-repo**.
 | `client.json`     | `~/.workflows/client.json`                  | `~/.workflows/client.json`           |
 | `config.json`     | `.workflows/config.json` (repo root)        | `.workflows/config.json`             |
 
-The OpenCode delivery owns its `mcp.js`, commands, skills, and MCP registration in the selected
+The OpenCode delivery owns its MCP runtime, commands, skills, and MCP registration in the selected
 OpenCode scope. Only connection state belongs under `~/.workflows`; `config.json` is always per-repo.
 
 ## Steps
 
-### 1 · Download the server and its resource helper
+### 1 · Download the server, repository worker and resource helper
 
 Download the bundled OpenCode MCP server from:
 
@@ -53,6 +55,8 @@ Download the bundled OpenCode MCP server from:
 mkdir -p ~/.config/opencode/workflows
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/mcp.js \
   -o ~/.config/opencode/workflows/mcp.js
+curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/repository-operation-worker.js \
+  -o ~/.config/opencode/workflows/repository-operation-worker.js
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/workflows-owned-process.exe \
   -o ~/.config/opencode/workflows/workflows-owned-process.exe
 ```
@@ -63,6 +67,8 @@ curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main
 mkdir -p .opencode/workflows
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/mcp.js \
   -o .opencode/workflows/mcp.js
+curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/repository-operation-worker.js \
+  -o .opencode/workflows/repository-operation-worker.js
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/workflows-owned-process.exe \
   -o .opencode/workflows/workflows-owned-process.exe
 ```
