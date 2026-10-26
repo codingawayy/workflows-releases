@@ -7,6 +7,7 @@ you a **board URL** (`apiUrl`), a **project id** (`projectId`), and a **scope** 
 ## What you're installing
 
 - **`mcp.js`** — the `workflows` MCP server (the spine tools: read/write items, drive transitions).
+- **`workflows-package.json`** — the installed package version used in local diagnostic exports; keep it beside `mcp.js`.
 - **`repository-operation-worker.js`** — the checkout preparation and publication worker, installed beside `mcp.js`.
 - **`workflows-owned-process.exe`** — the Windows local resource helper, installed beside `mcp.js`.
 - **Six command files** — `/workflows-add-item`, `/workflows-author`, `/workflows-build-skills`,
@@ -30,6 +31,7 @@ The user's one-liner named a scope: **global** or **per-repo**.
 | File              | Global scope                                | Per-repo scope                       |
 | ----------------- | ------------------------------------------- | ------------------------------------ |
 | `mcp.js`          | `~/.config/opencode/workflows/mcp.js`       | `.opencode/workflows/mcp.js`         |
+| `workflows-package.json` | `~/.config/opencode/workflows/workflows-package.json` | `.opencode/workflows/workflows-package.json` |
 | `repository-operation-worker.js` | `~/.config/opencode/workflows/repository-operation-worker.js` | `.opencode/workflows/repository-operation-worker.js` |
 | `workflows-owned-process.exe` | `~/.config/opencode/workflows/workflows-owned-process.exe` | `.opencode/workflows/workflows-owned-process.exe` |
 | Command files     | `~/.config/opencode/commands/`              | `.opencode/commands/`                |
@@ -55,6 +57,8 @@ Download the bundled OpenCode MCP server from:
 mkdir -p ~/.config/opencode/workflows
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/mcp.js \
   -o ~/.config/opencode/workflows/mcp.js
+curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/workflows-package.json \
+  -o ~/.config/opencode/workflows/workflows-package.json
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/repository-operation-worker.js \
   -o ~/.config/opencode/workflows/repository-operation-worker.js
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/workflows-owned-process.exe \
@@ -67,6 +71,8 @@ curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main
 mkdir -p .opencode/workflows
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/mcp.js \
   -o .opencode/workflows/mcp.js
+curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/workflows-package.json \
+  -o .opencode/workflows/workflows-package.json
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/repository-operation-worker.js \
   -o .opencode/workflows/repository-operation-worker.js
 curl -fsSL https://raw.githubusercontent.com/codingawayy/workflows-releases/main/opencode/workflows-owned-process.exe \
